@@ -22,7 +22,7 @@
 import PackageDescription
 
 let isDevelopment = false
-let isTesting = true
+let isTesting = false
 
 let dependencies = [
   ("c-kit", "main")
