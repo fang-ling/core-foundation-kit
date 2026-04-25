@@ -1,0 +1,57 @@
+// swift-tools-version: 6.2
+
+//
+//  Package.swift
+//  core-foundation-kit
+//
+//  Created by Fang Ling on 2026/4/25.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
+import PackageDescription
+
+let isDevelopment = false
+let isTesting = true
+
+let dependencies = [
+  ("c-kit", "main")
+]
+
+let package = Package(
+  name: "core-foundation-kit",
+  products: [
+    .library(name: "CoreFoundationKit", targets: ["CoreFoundationKit"])
+  ],
+  dependencies: dependencies.map({
+    if isDevelopment {
+      return .package(path: "../\($0.0)")
+    } else {
+      return .package(url: "https://github.com/fang-ling/\($0.0)", branch: $0.1)
+    }
+  }),
+  targets: [
+    .target(
+      name: "CoreFoundationKit",
+      dependencies: [
+        .product(name: "CKit", package: "c-kit")
+      ],
+      publicHeadersPath: "Includes",
+      cSettings: isTesting ? [.define("ONLINE_JUDGE")] : []
+    ),
+    .testTarget(
+      name: "CoreFoundationKitTests",
+      dependencies: ["CoreFoundationKit"]
+    )
+  ]
+)
