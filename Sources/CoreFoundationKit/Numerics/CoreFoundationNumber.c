@@ -23,6 +23,13 @@
 
 C_ASSUME_NONNULL_BEGIN
 
+#ifndef ONLINE_JUDGE
+  CoreFoundationAnyObject*
+  FoundationCoreFoundationNumberInitializeWithUnsignedInteger(
+    CUnsignedInteger64 value
+  );
+#endif
+
 struct CoreFoundationNumber {
   CoreFoundationObject object;
 
@@ -38,18 +45,20 @@ void CoreFoundationNumberRegisterClass() {
 
 CoreFoundationNumber*
 CoreFoundationNumberInitializeWithUnsignedInteger(CUnsignedInteger64 value) {
+#ifdef ONLINE_JUDGE
   let size = sizeof(CoreFoundationNumber);
   let number = (CoreFoundationNumber*)CMemoryAllocate(size);
 
-#ifdef ONLINE_JUDGE
   number->object.isa = NULL;
   number->object.referenceCount = 1;
   number->object.typeID = kCoreFoundationTypeIDNumber;
-#endif
 
   number->value.unsignedInteger64 = value;
 
   return number;
+#else
+  return FoundationCoreFoundationNumberInitializeWithUnsignedInteger(value);
+#endif
 }
 
 CUnsignedInteger64

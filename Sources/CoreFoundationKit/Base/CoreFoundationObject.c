@@ -21,12 +21,12 @@
 
 C_ASSUME_NONNULL_BEGIN
 
-CoreFoundationClass CoreFoundationClassTable[256];
-
 #ifndef ONLINE_JUDGE
   extern void* objc_retain(void* object);
   extern void objc_release(void* object);
 #endif
+
+CoreFoundationClass CoreFoundationClassTable[256];
 
 void CoreFoundationRetain(CoreFoundationAnyObject* object) {
   if (object == NULL) {
