@@ -31,7 +31,7 @@ CoreFoundationClass CoreFoundationClassTable[256];
 void CoreFoundationRetain(CoreFoundationAnyObject* object) {
   if (object == NULL) {
     CDebuggingHaltWithMessage(
-      "*** CoreFoundationRetain() called with NULL. ***"
+      "*** CoreFoundationRetain() CALLED WITH NULL. ***"
     );
   }
 
@@ -45,7 +45,7 @@ void CoreFoundationRetain(CoreFoundationAnyObject* object) {
 void CoreFoundationRelease(CoreFoundationAnyObject* object) {
   if (object == NULL) {
     CDebuggingHaltWithMessage(
-      "*** CoreFoundationRelease() called with NULL. ***"
+      "*** CoreFoundationRelease() CALLED WITH NULL. ***"
     );
   }
 

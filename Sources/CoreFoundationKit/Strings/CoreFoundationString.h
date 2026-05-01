@@ -33,7 +33,7 @@ CoreFoundationStringInitializeWithCString(CString cString);
 
 CUnsignedInteger64 CoreFoundationStringGetCount(CoreFoundationString* string);
 
-void CoreFoundationStringGetCharacters(
+void CoreFoundationStringCopyCharacters(
   CoreFoundationString* string,
   CInteger32* characters
 );

@@ -83,7 +83,7 @@ CUnsignedInteger64 CoreFoundationStringGetCount(CoreFoundationString* string) {
   return count;
 }
 
-void CoreFoundationStringGetCharacters(
+void CoreFoundationStringCopyCharacters(
   CoreFoundationString* string,
   CInteger32* characters
 ) {
