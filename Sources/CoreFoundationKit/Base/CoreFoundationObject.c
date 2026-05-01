@@ -30,7 +30,9 @@ CoreFoundationClass CoreFoundationClassTable[256];
 
 void CoreFoundationRetain(CoreFoundationAnyObject* object) {
   if (object == NULL) {
-    CHaltWithMessage("*** CoreFoundationRetain() called with NULL. ***");
+    CDebuggingHaltWithMessage(
+      "*** CoreFoundationRetain() called with NULL. ***"
+    );
   }
 
 #ifndef ONLINE_JUDGE
@@ -42,7 +44,9 @@ void CoreFoundationRetain(CoreFoundationAnyObject* object) {
 
 void CoreFoundationRelease(CoreFoundationAnyObject* object) {
   if (object == NULL) {
-    CHaltWithMessage("*** CoreFoundationRelease() called with NULL. ***");
+    CDebuggingHaltWithMessage(
+      "*** CoreFoundationRelease() called with NULL. ***"
+    );
   }
 
 #ifndef ONLINE_JUDGE

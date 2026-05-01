@@ -28,7 +28,7 @@ C_ASSUME_NONNULL_BEGIN
   FoundationCoreFoundationNumberInitializeWithUnsignedInteger(
     CUnsignedInteger64 value
   );
-#endif
+#endif /* !ONLINE_JUDGE */
 
 struct CoreFoundationNumber {
   CoreFoundationObject object;
@@ -37,11 +37,6 @@ struct CoreFoundationNumber {
     CUnsignedInteger64 unsignedInteger64;
   } value;
 };
-
-C_INITIALIZER
-void CoreFoundationNumberRegisterClass() {
-  CoreFoundationClassTable[kCoreFoundationTypeIDNumber].deinitialize = NULL;
-}
 
 CoreFoundationNumber*
 CoreFoundationNumberInitializeWithUnsignedInteger(CUnsignedInteger64 value) {
@@ -69,6 +64,11 @@ CoreFoundationNumberGetUnsignedIntegerValue(CoreFoundationNumber* number) {
 
   CoreFoundationRelease(number);
   return value;
+}
+
+C_INITIALIZER
+void CoreFoundationNumberRegisterClass() {
+  CoreFoundationClassTable[kCoreFoundationTypeIDNumber].deinitialize = NULL;
 }
 
 C_ASSUME_NONNULL_END

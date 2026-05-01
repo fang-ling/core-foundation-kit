@@ -42,10 +42,11 @@ typedef struct _CoreFoundationClass {
 
 extern CoreFoundationClass CoreFoundationClassTable[256];
 
-enum {
+typedef enum CoreFoundationTypeID {
   kCoreFoundationTypeIDNotAType = 0,
-  kCoreFoundationTypeIDNumber = 1
-};
+  kCoreFoundationTypeIDNumber = 1,
+  kCoreFoundationTypeIDString = 2
+} CoreFoundationTypeID;
 
 void CoreFoundationRetain(CoreFoundationAnyObject* object);
 

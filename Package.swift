@@ -53,5 +53,6 @@ let package = Package(
       name: "CoreFoundationKitTests",
       dependencies: ["CoreFoundationKit"]
     )
-  ]
+  ],
+  cLanguageStandard: .c89
 )
