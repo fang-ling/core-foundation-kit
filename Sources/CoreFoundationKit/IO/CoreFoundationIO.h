@@ -1,8 +1,8 @@
 /*
- *  CoreFoundationKit.h
+ *  CoreFoundationIO.h
  *  core-foundation-kit
  *
- *  Created by Fang Ling on 2026/4/25.
+ *  Created by Fang Ling on 2026/4/26.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,13 +17,25 @@
  *  limitations under the License.
  */
 
-#ifndef CoreFoundationKit_h
-#define CoreFoundationKit_h
+#ifndef CoreFoundationIO_h
+#define CoreFoundationIO_h
 
-#include "../../Base/CoreFoundationObject.h"
-#include "../../IO/CoreFoundationIO.h"
-#include "../../Numerics/CoreFoundationNumber.h"
-#include "../../Sorting/CoreFoundationComparisonResult.h"
-#include "../../Strings/CoreFoundationString.h"
+#include <CKit/CKit.h>
 
-#endif /* CoreFoundationKit_h */
+#include "../Numerics/CoreFoundationNumber.h"
+#include "../Strings/CoreFoundationString.h"
+
+C_ASSUME_NONNULL_BEGIN
+
+CoreFoundationNumber* nillable CoreFoundationIOScanUnsignedInteger();
+
+CoreFoundationString* nillable CoreFoundationIOScanString();
+
+void CoreFoundationIOPrintUnsignedInteger(
+  CoreFoundationNumber* number,
+  CString terminator
+);
+
+C_ASSUME_NONNULL_END
+
+#endif /* CoreFoundationIO_h */
