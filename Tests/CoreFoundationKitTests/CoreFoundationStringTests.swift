@@ -17,9 +17,9 @@
 //  limitations under the License.
 //
 
-@testable import CoreFoundationKit
-
 import Testing
+
+import CoreFoundationKit
 
 @Test("CoreFoundationStringTests")
 func testCoreFoundationString() {
@@ -31,7 +31,7 @@ func testCoreFoundationString() {
     let characters = UnsafeMutablePointer<CInteger32>.allocate(
       capacity: Int(count)
     )
-    CoreFoundationStringGetCharacters(string, characters)
+    CoreFoundationStringCopyCharacters(string, characters)
     let inputCharacters = inputString.unicodeScalars.map {
       CInteger32($0.value)
     }
@@ -48,4 +48,3 @@ func testCoreFoundationString() {
     CoreFoundationRelease(UnsafeMutableRawPointer(string))
   }
 }
-

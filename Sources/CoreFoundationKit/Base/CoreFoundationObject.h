@@ -45,7 +45,8 @@ extern CoreFoundationClass CoreFoundationClassTable[256];
 typedef enum CoreFoundationTypeID {
   kCoreFoundationTypeIDNotAType = 0,
   kCoreFoundationTypeIDNumber = 1,
-  kCoreFoundationTypeIDString = 2
+  kCoreFoundationTypeIDString = 2,
+  kCoreFoundationTypeIDArray = 3
 } CoreFoundationTypeID;
 
 void CoreFoundationRetain(CoreFoundationAnyObject* object);

@@ -17,9 +17,9 @@
 //  limitations under the License.
 //
 
-@testable import CoreFoundationKit
-
 import Testing
+
+import CoreFoundationKit
 
 @Test("CoreFoundationNumberTests")
 func testCoreFoundationNumber() {

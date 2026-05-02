@@ -1,8 +1,8 @@
 /*
- *  CoreFoundationKit.h
+ *  CoreFoundationArray.h
  *  core-foundation-kit
  *
- *  Created by Fang Ling on 2026/4/25.
+ *  Created by Fang Ling on 2026/5/2.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,15 +17,26 @@
  *  limitations under the License.
  */
 
-#ifndef CoreFoundationKit_h
-#define CoreFoundationKit_h
+#ifndef CoreFoundationArray_h
+#define CoreFoundationArray_h
 
-#include "../../Base/CoreFoundationObject.h"
-#include "../../Collections/CoreFoundationArray.h"
-#include "../../Collections/CoreFoundationMutableArray.h"
-#include "../../IO/CoreFoundationIO.h"
-#include "../../Numerics/CoreFoundationNumber.h"
-#include "../../Sorting/CoreFoundationComparisonResult.h"
-#include "../../Strings/CoreFoundationString.h"
+#include <CKit/CKit.h>
 
-#endif /* CoreFoundationKit_h */
+#include "../Base/CoreFoundationObject.h"
+
+C_ASSUME_NONNULL_BEGIN
+
+typedef struct CoreFoundationArray CoreFoundationArray;
+
+CoreFoundationArray* CoreFoundationArrayInitialize();
+
+CUnsignedInteger64 CoreFoundationArrayGetCount(CoreFoundationArray* array);
+
+CoreFoundationAnyObject* CoreFoundationArrayGetObjectAtIndex(
+  CoreFoundationArray* array,
+  CUnsignedInteger64 index
+);
+
+C_ASSUME_NONNULL_END
+
+#endif /* CoreFoundationArray_h */
