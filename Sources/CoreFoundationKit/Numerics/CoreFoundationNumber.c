@@ -24,7 +24,7 @@
 C_ASSUME_NONNULL_BEGIN
 
 #ifndef ONLINE_JUDGE
-  CoreFoundationAnyObject*
+  extern CoreFoundationAnyObject*
   FoundationCoreFoundationNumberInitializeWithUnsignedInteger(
     CUnsignedInteger64 value
   );

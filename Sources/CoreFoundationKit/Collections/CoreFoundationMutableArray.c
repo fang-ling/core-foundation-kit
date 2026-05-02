@@ -23,6 +23,17 @@
 
 C_ASSUME_NONNULL_BEGIN
 
+#ifndef ONLINE_JUDGE
+  extern CoreFoundationAnyObject*
+  FoundationCoreFoundationMutableArrayInitialize();
+#endif /* !ONLINE_JUDGE */
+
+#ifndef ONLINE_JUDGE
+  CoreFoundationMutableArray* CoreFoundationMutableArrayInitialize() {
+    return FoundationCoreFoundationMutableArrayInitialize();
+  }
+#endif
+
 void CoreFoundationMutableArrayAppendObject(
   CoreFoundationMutableArray* array,
   CoreFoundationAnyObject* object

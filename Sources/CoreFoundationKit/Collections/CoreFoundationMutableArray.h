@@ -28,16 +28,10 @@ C_ASSUME_NONNULL_BEGIN
 
 typedef CoreFoundationArray CoreFoundationMutableArray;
 
-#ifndef ONLINE_JUDGE
-  CoreFoundationAnyObject* FoundationCoreFoundationMutableArrayInitialize();
-#endif /* !ONLINE_JUDGE */
-
 #ifdef ONLINE_JUDGE
 #  define CoreFoundationMutableArrayInitialize CoreFoundationArrayInitialize
 #else
-  CoreFoundationMutableArray* CoreFoundationMutableArrayInitialize() {
-    return FoundationCoreFoundationMutableArrayInitialize();
-  }
+  CoreFoundationMutableArray* CoreFoundationMutableArrayInitialize();
 #endif
 
 #define CoreFoundationMutableArrayGetCount CoreFoundationArrayGetCount

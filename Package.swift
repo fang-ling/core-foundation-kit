@@ -22,7 +22,7 @@
 import PackageDescription
 
 let isDevelopment = false
-let isTesting = false
+let isOnlineJudge = false
 
 let dependencies = [
   ("c-kit", "main")
@@ -47,7 +47,7 @@ let package = Package(
         .product(name: "CKit", package: "c-kit")
       ],
       publicHeadersPath: "Includes",
-      cSettings: isTesting ? [.define("ONLINE_JUDGE")] : []
+      cSettings: isOnlineJudge ? [.define("ONLINE_JUDGE")] : []
     ),
     .testTarget(
       name: "CoreFoundationKitTests",

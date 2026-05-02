@@ -24,7 +24,7 @@
 C_ASSUME_NONNULL_BEGIN
 
 #ifndef ONLINE_JUDGE
-  CoreFoundationAnyObject* FoundationCoreFoundationArrayInitialize();
+  extern CoreFoundationAnyObject* FoundationCoreFoundationArrayInitialize();
 #endif /* !ONLINE_JUDGE */
 
 CoreFoundationArray* CoreFoundationArrayInitialize() {
