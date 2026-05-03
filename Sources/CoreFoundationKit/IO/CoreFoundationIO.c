@@ -21,6 +21,17 @@
 
 C_ASSUME_NONNULL_BEGIN
 
+CoreFoundationNumber* nillable CoreFoundationIOScanInteger() {
+  let buffer = 0ll;
+  if (CIOScanWithFormat("%lld", &buffer) == 1) {
+    let number = CoreFoundationNumberInitializeWithInteger(buffer);
+
+    return number;
+  }
+
+  return NULL;
+}
+
 CoreFoundationNumber* nillable CoreFoundationIOScanUnsignedInteger() {
   let buffer = 0ull;
   if (CIOScanWithFormat("%llu", &buffer) == 1) {
@@ -41,6 +52,15 @@ CoreFoundationString* nillable CoreFoundationIOScanString() {
   }
 
   return NULL;
+}
+
+void CoreFoundationIOPrintInteger(
+  CoreFoundationNumber* number,
+  CString terminator
+) {
+  let buffer = CoreFoundationNumberGetIntegerValue(number);
+
+  CIOPrintWithFormat("%lld%s", buffer, terminator);
 }
 
 void CoreFoundationIOPrintUnsignedInteger(

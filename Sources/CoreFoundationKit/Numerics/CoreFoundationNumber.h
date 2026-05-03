@@ -27,7 +27,12 @@ C_ASSUME_NONNULL_BEGIN
 typedef struct CoreFoundationNumber CoreFoundationNumber;
 
 CoreFoundationNumber*
+CoreFoundationNumberInitializeWithInteger(CInteger64 value);
+
+CoreFoundationNumber*
 CoreFoundationNumberInitializeWithUnsignedInteger(CUnsignedInteger64 value);
+
+CInteger64 CoreFoundationNumberGetIntegerValue(CoreFoundationNumber* number);
 
 CUnsignedInteger64
 CoreFoundationNumberGetUnsignedIntegerValue(CoreFoundationNumber* number);

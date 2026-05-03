@@ -25,6 +25,9 @@ C_ASSUME_NONNULL_BEGIN
 
 #ifndef ONLINE_JUDGE
   extern CoreFoundationAnyObject*
+  FoundationCoreFoundationNumberInitializeWithInteger(CInteger64 value);
+
+  extern CoreFoundationAnyObject*
   FoundationCoreFoundationNumberInitializeWithUnsignedInteger(
     CUnsignedInteger64 value
   );
@@ -34,9 +37,28 @@ struct CoreFoundationNumber {
   CoreFoundationObject object;
 
   union {
+    CInteger64 integer64;
     CUnsignedInteger64 unsignedInteger64;
   } value;
 };
+
+CoreFoundationNumber*
+CoreFoundationNumberInitializeWithInteger(CInteger64 value) {
+#ifdef ONLINE_JUDGE
+  let size = sizeof(CoreFoundationNumber);
+  let number = (CoreFoundationNumber*)CMemoryAllocate(size);
+
+  number->object.isa = NULL;
+  number->object.referenceCount = 1;
+  number->object.typeID = kCoreFoundationTypeIDNumber;
+
+  number->value.integer64 = value;
+
+  return number;
+#else
+  return FoundationCoreFoundationNumberInitializeWithInteger(value);
+#endif
+}
 
 CoreFoundationNumber*
 CoreFoundationNumberInitializeWithUnsignedInteger(CUnsignedInteger64 value) {
@@ -54,6 +76,15 @@ CoreFoundationNumberInitializeWithUnsignedInteger(CUnsignedInteger64 value) {
 #else
   return FoundationCoreFoundationNumberInitializeWithUnsignedInteger(value);
 #endif
+}
+
+CInteger64 CoreFoundationNumberGetIntegerValue(CoreFoundationNumber* number) {
+  CoreFoundationRetain(number);
+
+  let value = number->value.integer64;
+
+  CoreFoundationRelease(number);
+  return value;
 }
 
 CUnsignedInteger64
