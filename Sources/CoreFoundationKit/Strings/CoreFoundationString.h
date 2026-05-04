@@ -33,6 +33,11 @@ CoreFoundationStringInitializeWithCString(CString cString);
 
 CUnsignedInteger64 CoreFoundationStringGetCount(CoreFoundationString* string);
 
+CInteger32 CoreFoundationStringGetCharacterAtIndex(
+  CoreFoundationString* string,
+  CUnsignedInteger64 index
+);
+
 void CoreFoundationStringCopyCharacters(
   CoreFoundationString* string,
   CInteger32* characters

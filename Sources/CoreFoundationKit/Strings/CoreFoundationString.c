@@ -83,6 +83,19 @@ CUnsignedInteger64 CoreFoundationStringGetCount(CoreFoundationString* string) {
   return count;
 }
 
+CInteger32 CoreFoundationStringGetCharacterAtIndex(
+  CoreFoundationString* string,
+  CUnsignedInteger64 index
+) {
+  CoreFoundationRetain(string);
+
+  let character = string->characters[index];
+
+  CoreFoundationRelease(string);
+
+  return character;
+}
+
 void CoreFoundationStringCopyCharacters(
   CoreFoundationString* string,
   CInteger32* characters
