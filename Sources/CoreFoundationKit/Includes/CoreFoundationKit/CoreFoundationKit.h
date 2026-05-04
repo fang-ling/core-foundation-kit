@@ -23,6 +23,7 @@
 #include "../../Base/CoreFoundationObject.h"
 #include "../../Collections/CoreFoundationArray.h"
 #include "../../Collections/CoreFoundationMutableArray.h"
+#include "../../Geometry/CoreFoundationGeometry.h"
 #include "../../IO/CoreFoundationIO.h"
 #include "../../Numerics/CoreFoundationNumber.h"
 #include "../../Sorting/CoreFoundationComparisonResult.h"
