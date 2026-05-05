@@ -1,8 +1,8 @@
 /*
- *  CoreFoundationKit.h
+ *  CoreFoundationArray+Private.h
  *  core-foundation-kit
  *
- *  Created by Fang Ling on 2026/4/25.
+ *  Created by Fang Ling on 2026/5/2.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,16 +17,24 @@
  *  limitations under the License.
  */
 
-#ifndef CoreFoundationKit_h
-#define CoreFoundationKit_h
+#ifndef CoreFoundationArray_Private_h
+#define CoreFoundationArray_Private_h
 
-#include "../../Base/CoreFoundationObject.h"
-#include "../../Collections/CoreFoundationArray.h"
-#include "../../Collections/CoreFoundationMutableArray.h"
-#include "../../Geometry/CoreFoundationGeometry.h"
-#include "../../IO/CoreFoundationIO.h"
-#include "../../Numerics/CoreFoundationNumber.h"
-#include "../../Sorting/CoreFoundationComparisonResult.h"
-#include "../../Strings/CoreFoundationString.h"
+#include <CKit/CKit.h>
 
-#endif /* CoreFoundationKit_h */
+#include "../Base/CoreFoundationObject.h"
+#include "../Numerics/CoreFoundationNumber.h"
+
+C_ASSUME_NONNULL_BEGIN
+
+struct CoreFoundationArray {
+  CoreFoundationObject object;
+
+  CoreFoundationAnyObject* nonnil * nonnil objects;
+  CUnsignedInteger64 count;
+  CUnsignedInteger64 capacity;
+};
+
+C_ASSUME_NONNULL_END
+
+#endif /* CoreFoundationArray_Private_h */

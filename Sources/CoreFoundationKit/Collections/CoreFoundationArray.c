@@ -1,0 +1,81 @@
+/*
+ *  CoreFoundationArray.c
+ *  core-foundation-kit
+ *
+ *  Created by Fang Ling on 2026/5/2.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+#include "CoreFoundationArray.h"
+
+#include "CoreFoundationArray+Private.h"
+
+C_ASSUME_NONNULL_BEGIN
+
+#ifndef ONLINE_JUDGE
+  extern CoreFoundationAnyObject* FoundationCoreFoundationArrayInitialize();
+#endif /* !ONLINE_JUDGE */
+
+CoreFoundationArray* CoreFoundationArrayInitialize() {
+#ifdef ONLINE_JUDGE
+  let size = sizeof(CoreFoundationArray);
+  let array = (CoreFoundationArray*)CMemoryAllocate(size);
+
+  array->object.isa = NULL;
+  array->object.referenceCount = 1;
+  array->object.typeID = kCoreFoundationTypeIDArray;
+
+  array->objects = CMemoryAllocate(0);
+  array->count = 0;
+  array->capacity = 0;
+
+  return array;
+#else
+  return FoundationCoreFoundationArrayInitialize();
+#endif
+}
+
+void CoreFoundationArrayDeinitialize(CoreFoundationAnyObject* array) {
+  let i = 0;
+  for (; i < ((CoreFoundationArray*)array)->count; i += 1) {
+    CoreFoundationRelease(((CoreFoundationArray*)array)->objects[i]);
+  }
+
+  CMemoryDeallocate(((CoreFoundationArray*)array)->objects);
+}
+
+CUnsignedInteger64 CoreFoundationArrayGetCount(CoreFoundationArray* array) {
+  CoreFoundationRetain(array);
+
+  let count = array->count;
+
+  CoreFoundationRelease(array);
+
+  return count;
+}
+
+CoreFoundationAnyObject* CoreFoundationArrayGetObjectAtIndex(
+  CoreFoundationArray* array,
+  CUnsignedInteger64 index
+) {
+  return array->objects[index];
+}
+
+C_INITIALIZER
+void CoreFoundationArrayRegisterClass() {
+  CoreFoundationClassTable[kCoreFoundationTypeIDArray].deinitialize =
+    CoreFoundationArrayDeinitialize;
+}
+
+C_ASSUME_NONNULL_END

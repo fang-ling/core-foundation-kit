@@ -21,16 +21,18 @@
 
 C_ASSUME_NONNULL_BEGIN
 
-CoreFoundationClass CoreFoundationClassTable[256];
-
 #ifndef ONLINE_JUDGE
   extern void* objc_retain(void* object);
   extern void objc_release(void* object);
 #endif
 
+CoreFoundationClass CoreFoundationClassTable[256];
+
 void CoreFoundationRetain(CoreFoundationAnyObject* object) {
   if (object == NULL) {
-    CHaltWithMessage("*** CoreFoundationRetain() called with NULL. ***");
+    CDebuggingHaltWithMessage(
+      "*** CoreFoundationRetain() CALLED WITH NULL. ***"
+    );
   }
 
 #ifndef ONLINE_JUDGE
@@ -42,7 +44,9 @@ void CoreFoundationRetain(CoreFoundationAnyObject* object) {
 
 void CoreFoundationRelease(CoreFoundationAnyObject* object) {
   if (object == NULL) {
-    CHaltWithMessage("*** CoreFoundationRelease() called with NULL. ***");
+    CDebuggingHaltWithMessage(
+      "*** CoreFoundationRelease() CALLED WITH NULL. ***"
+    );
   }
 
 #ifndef ONLINE_JUDGE

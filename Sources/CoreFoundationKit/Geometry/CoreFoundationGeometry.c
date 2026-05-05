@@ -1,8 +1,8 @@
 /*
- *  CoreFoundationNumber.h
+ *  CoreFoundationGeometry.c
  *  core-foundation-kit
  *
- *  Created by Fang Ling on 2026/4/25.
+ *  Created by Fang Ling on 2026/5/3.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,26 +17,32 @@
  *  limitations under the License.
  */
 
-#ifndef CoreFoundationNumber_h
-#define CoreFoundationNumber_h
-
-#include <CKit/CKit.h>
+#include "CoreFoundationGeometry.h"
 
 C_ASSUME_NONNULL_BEGIN
 
-typedef struct CoreFoundationNumber CoreFoundationNumber;
+CBoolean CoreFoundationPointEqual(
+  CoreFoundationPoint lhs,
+  CoreFoundationPoint rhs
+) {
+  return lhs.x == rhs.x && lhs.y == rhs.y;
+}
 
-CoreFoundationNumber*
-CoreFoundationNumberInitializeWithInteger(CInteger64 value);
+CBoolean CoreFoundationSizeEqual(
+  CoreFoundationSize lhs,
+  CoreFoundationSize rhs
+) {
+  return lhs.width == rhs.width && lhs.height == rhs.height;
+}
 
-CoreFoundationNumber*
-CoreFoundationNumberInitializeWithUnsignedInteger(CUnsignedInteger64 value);
-
-CInteger64 CoreFoundationNumberGetIntegerValue(CoreFoundationNumber* number);
-
-CUnsignedInteger64
-CoreFoundationNumberGetUnsignedIntegerValue(CoreFoundationNumber* number);
+CBoolean CoreFoundationRectangleEqual(
+  CoreFoundationRectangle lhs,
+  CoreFoundationRectangle rhs
+) {
+  return (
+    CoreFoundationPointEqual(lhs.origin, rhs.origin) &&
+    CoreFoundationSizeEqual(lhs.size, rhs.size)
+  );
+}
 
 C_ASSUME_NONNULL_END
-
-#endif /* CoreFoundationNumber_h */
