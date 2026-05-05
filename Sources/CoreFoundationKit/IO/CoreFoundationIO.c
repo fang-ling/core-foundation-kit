@@ -44,7 +44,7 @@ CoreFoundationNumber* nillable CoreFoundationIOScanUnsignedInteger() {
 }
 
 CoreFoundationString* nillable CoreFoundationIOScanString() {
-  CInteger8 buffer[1024];
+  CInteger8 buffer[1024]; /* FIXME: This buffer may overflow. */
   if (CIOScanWithFormat("%s", buffer) == 1) {
     let string = CoreFoundationStringInitializeWithCString(buffer);
 
@@ -70,6 +70,26 @@ void CoreFoundationIOPrintUnsignedInteger(
   let buffer = CoreFoundationNumberGetUnsignedIntegerValue(number);
 
   CIOPrintWithFormat("%llu%s", buffer, terminator);
+}
+
+void CoreFoundationIOPrintString(
+  CoreFoundationString* string,
+  CString terminator
+) {
+  /* FIXME: These buffers may overflow. */
+  CInteger32 characters[1024];
+  let _characters = (const CInteger32*)characters;
+  CInteger8 buffer[1024] = { 0 };
+
+  CoreFoundationStringCopyCharacters(string, characters);
+  CStringConvertUTF32CharactersToUTF8Characters(
+    buffer,
+    &_characters,
+    1024,
+    1024
+  );
+
+  CIOPrintWithFormat("%s%s", buffer, terminator);
 }
 
 C_ASSUME_NONNULL_END

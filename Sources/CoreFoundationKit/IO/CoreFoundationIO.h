@@ -43,6 +43,11 @@ void CoreFoundationIOPrintUnsignedInteger(
   CString terminator
 );
 
+void CoreFoundationIOPrintString(
+  CoreFoundationString* string,
+  CString terminator
+);
+
 C_ASSUME_NONNULL_END
 
 #endif /* CoreFoundationIO_h */
