@@ -39,6 +39,24 @@ typedef CoreFoundationArray CoreFoundationMutableArray;
 #define CoreFoundationMutableArrayGetObjectAtIndex \
   CoreFoundationArrayGetObjectAtIndex
 
+/**
+ * Changes the value at a given index in an array.
+ *
+ * - Parameters:
+ *   - array: The array in which the value is to be changed.
+ *   - index: The index at which to set the new value. The value must not lie
+ *     outside the index space of array (`0` to `N-1` inclusive, where `N` is
+ *     the count of the array before the operation).
+ *   - object: The value to set in the array. The value is retained by the array
+ *     and the previous value at `index` is released. The indices of other
+ *     values are not affected.
+ */
+void CoreFoundationMutableArraySetObjectAtIndex(
+  CoreFoundationMutableArray* array,
+  CUnsignedInteger64 index,
+  CoreFoundationAnyObject* object
+);
+
 void CoreFoundationMutableArrayAppendObject(
   CoreFoundationArray* array,
   CoreFoundationAnyObject* object
