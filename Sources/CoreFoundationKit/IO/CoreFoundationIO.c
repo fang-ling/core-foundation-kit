@@ -21,6 +21,8 @@
 
 C_ASSUME_NONNULL_BEGIN
 
+CInteger8 CoreFoundationIOByteBuffer[1048576]; /* FIXME: Not thread-safe. */
+
 CoreFoundationNumber* nillable CoreFoundationIOScanInteger() {
   let buffer = 0ll;
   if (CIOScanWithFormat("%lld", &buffer) == 1) {
@@ -44,9 +46,10 @@ CoreFoundationNumber* nillable CoreFoundationIOScanUnsignedInteger() {
 }
 
 CoreFoundationString* nillable CoreFoundationIOScanString() {
-  CInteger8 buffer[1024]; /* FIXME: This buffer may overflow. */
-  if (CIOScanWithFormat("%s", buffer) == 1) {
-    let string = CoreFoundationStringInitializeWithCString(buffer);
+  if (CIOScanWithFormat("%s", CoreFoundationIOByteBuffer) == 1) {
+    let string = CoreFoundationStringInitializeWithCString(
+      CoreFoundationIOByteBuffer
+    );
 
     return string;
   }
@@ -85,7 +88,7 @@ void CoreFoundationIOPrintString(
   CStringConvertUTF32CharactersToUTF8Characters(
     buffer,
     &_characters,
-    1024,
+    CoreFoundationStringGetCount(string),
     1024
   );
 

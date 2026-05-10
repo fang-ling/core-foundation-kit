@@ -34,6 +34,21 @@ C_ASSUME_NONNULL_BEGIN
   }
 #endif
 
+void CoreFoundationMutableArraySetObjectAtIndex(
+  CoreFoundationMutableArray* array,
+  CUnsignedInteger64 index,
+  CoreFoundationAnyObject* object
+) {
+  CoreFoundationRetain(array);
+  CoreFoundationRetain(object);
+
+  CoreFoundationRelease(array->objects[index]);
+
+  array->objects[index] = object;
+
+  CoreFoundationRelease(array);
+}
+
 void CoreFoundationMutableArrayAppendObject(
   CoreFoundationMutableArray* array,
   CoreFoundationAnyObject* object

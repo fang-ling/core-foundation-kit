@@ -22,6 +22,8 @@
 
 #include <CKit/CKit.h>
 
+#include "../Strings/CoreFoundationString.h"
+
 C_ASSUME_NONNULL_BEGIN
 
 typedef void CoreFoundationAnyObject;
@@ -37,6 +39,9 @@ typedef struct _CoreFoundationObject {
 } CoreFoundationObject;
 
 typedef struct _CoreFoundationClass {
+  CoreFoundationString * nillable
+ (* nonnil copyDescription)(CoreFoundationAnyObject* object);
+
   void (*deinitialize)(CoreFoundationAnyObject* object);
 } CoreFoundationClass;
 
