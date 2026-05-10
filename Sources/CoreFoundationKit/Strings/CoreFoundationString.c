@@ -69,8 +69,133 @@ CoreFoundationStringInitializeWithCString(CString cString) {
 #endif
 }
 
+CoreFoundationString* nillable
+CoreFoundationStringInitializeWithFormat(CString format, ...) {
+  let arguments = (CVariableArgumentList){ 0 };
+  CVariableArgumentListInitialize(arguments, format);
+
+  let cString = (CInteger8*)CMemoryAllocate(1 * sizeof(CInteger8));
+  let cStringCapacity = 1ll;
+  let cStringCount = 0ll;
+
+  let formatCount = CStringGetCount(format);
+  let i = 0ll;
+  for (; i < formatCount; i += 1) {
+    let buffer = (CInteger8*)NULL;
+    let bufferCount = 0ll;
+    let needsDeallocate = false;
+
+    if (format[i] == '%' && format[i + 1] == 'd') {
+      let value = CVariableArgumentListGetNextArgument(arguments, CInteger64);
+
+      buffer = (CInteger8 [32]){ 0 };
+      bufferCount = CIOPrintToStringWithFormat(buffer, "%lld", value);
+
+      i += 1;
+      needsDeallocate = false;
+    } else if (format[i] == '%' && format[i + 1] == 'f') {
+      let value = CVariableArgumentListGetNextArgument(
+        arguments,
+        CFloatingPoint64
+      );
+
+      buffer = (CInteger8 [32]){ 0 };
+      bufferCount = CIOPrintToStringWithFormat(buffer, "%lf", value);
+
+      i += 1;
+      needsDeallocate = false;
+    } else if (format[i] == '%' && format[i + 1] == '@') {
+      let value = CVariableArgumentListGetNextArgument(
+        arguments,
+        CoreFoundationAnyObject*
+      );
+      CoreFoundationRetain(value);
+
+      let typeID = ((CoreFoundationObject*)value)->typeID;
+      let class = CoreFoundationClassTable[typeID];
+      let descriptionString = class.copyDescription(value);
+
+      buffer = (CInteger8*)CMemoryAllocate(
+        (descriptionString->count * 4 + 1) * sizeof(CInteger8)
+      );
+      let characters = (const CInteger32*)descriptionString->characters;
+      bufferCount = CStringConvertUTF32CharactersToUTF8Characters(
+        buffer,
+        &characters,
+        descriptionString->count,
+        descriptionString->count * 4
+      );
+      buffer[bufferCount] = '\0';
+
+      CoreFoundationRelease(value);
+      CoreFoundationRelease(descriptionString);
+
+      i += 1;
+      needsDeallocate = true;
+    } else {
+      let j = i;
+      for (; j < formatCount && format[j] != '%'; j += 1);
+
+      bufferCount = j - i;
+      buffer = (CInteger8*)CMemoryAllocate(bufferCount * sizeof(CInteger8));
+
+      let k = 0ll;
+      for (j = i; k < bufferCount; k += 1, j += 1) {
+        buffer[k] = format[j];
+      }
+
+      i = j - 1;
+      needsDeallocate = true;
+    }
+
+    /* Append the buffer to cString. */
+    while (cStringCapacity < cStringCount + bufferCount + 1) {
+      cStringCapacity *= 2;
+      cString = CMemoryResize(cString, cStringCapacity * sizeof(CInteger8));
+    }
+    CMemoryCopy(
+      cString + cStringCount,
+      buffer,
+      bufferCount * sizeof(CInteger8)
+    );
+    cStringCount += bufferCount;
+
+    if (needsDeallocate) {
+      CMemoryDeallocate(buffer);
+    }
+  }
+  CVariableArgumentListDeinitialize(arguments);
+
+  cString[cStringCount] = '\0';
+  let string = CoreFoundationStringInitializeWithCString(cString);
+
+  CMemoryDeallocate(cString);
+
+  return string;
+}
+
 void CoreFoundationStringDeinitialize(CoreFoundationAnyObject* string) {
   CMemoryDeallocate(((CoreFoundationString*)string)->characters);
+}
+
+CoreFoundationString*
+CoreFoundationStringCopyDescription(CoreFoundationAnyObject* string) {
+  CoreFoundationRetain(string);
+
+  /* TODO: Copy self. */
+  let copy = CoreFoundationStringInitializeWithCString("");
+  CMemoryDeallocate(copy->characters);
+  copy->count = ((CoreFoundationString*)string)->count;
+  copy->characters = CMemoryAllocate(copy->count * sizeof(CInteger32));
+  CMemoryCopy(
+    copy->characters,
+    ((CoreFoundationString*)string)->characters,
+    copy->count * sizeof(CInteger32)
+  );
+
+  CoreFoundationRelease(string);
+
+  return copy;
 }
 
 CUnsignedInteger64 CoreFoundationStringGetCount(CoreFoundationString* string) {
@@ -157,6 +282,8 @@ C_INITIALIZER
 void CoreFoundationStringRegisterClass() {
   CoreFoundationClassTable[kCoreFoundationTypeIDString].deinitialize =
     CoreFoundationStringDeinitialize;
+  CoreFoundationClassTable[kCoreFoundationTypeIDString].copyDescription =
+    CoreFoundationStringCopyDescription;
 }
 
 C_ASSUME_NONNULL_END

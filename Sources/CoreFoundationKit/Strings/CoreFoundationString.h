@@ -31,6 +31,19 @@ typedef struct CoreFoundationString CoreFoundationString;
 CoreFoundationString* nillable
 CoreFoundationStringInitializeWithCString(CString cString);
 
+/**
+ * Creates an immutable string from a formatted string and a variable number of
+ * arguments.
+ *
+ * - Parameter format: The formatted string with `printf`-style specifiers
+ *   followed by the variable argument list of values.
+ *
+ * - Returns An immutable string, or `NULL` if there was a problem creating the
+ *   object.
+ */
+CoreFoundationString* nillable
+CoreFoundationStringInitializeWithFormat(CString format, ...);
+
 CUnsignedInteger64 CoreFoundationStringGetCount(CoreFoundationString* string);
 
 CInteger32 CoreFoundationStringGetCharacterAtIndex(
