@@ -41,7 +41,7 @@ CoreFoundationStringInitializeWithCString(CString cString) {
   let size = sizeof(CoreFoundationString);
   let string = (CoreFoundationString*)CMemoryAllocate(size);
 
-  string->object.isa = NULL;
+  string->object.isa = null;
   string->object.referenceCount = 1;
   string->object.typeID = kCoreFoundationTypeIDString;
 
@@ -58,7 +58,7 @@ CoreFoundationStringInitializeWithCString(CString cString) {
     CMemoryDeallocate(string->characters);
     CMemoryDeallocate(string);
 
-    return NULL;
+    return null;
   }
 
   string->count = count;
@@ -81,18 +81,18 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
   let formatCount = CStringGetCount(format);
   let i = 0ll;
   for (; i < formatCount; i += 1) {
-    let buffer = (CInteger8*)NULL;
+    let buffer = (CInteger8*)null;
     let bufferCount = 0ll;
-    let needsDeallocate = false;
+    let needsDeallocate = no;
 
     if (format[i] == '%' && format[i + 1] == 'd') {
       let value = CVariableArgumentListGetNextArgument(arguments, CInteger64);
 
       buffer = (CInteger8 [32]){ 0 };
-      bufferCount = CIOPrintToStringWithFormat(buffer, "%lld", value);
+      bufferCount = CStringInitializeWithFormat(buffer, "%lld", value);
 
       i += 1;
-      needsDeallocate = false;
+      needsDeallocate = no;
     } else if (format[i] == '%' && format[i + 1] == 'f') {
       let value = CVariableArgumentListGetNextArgument(
         arguments,
@@ -100,10 +100,10 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
       );
 
       buffer = (CInteger8 [32]){ 0 };
-      bufferCount = CIOPrintToStringWithFormat(buffer, "%lf", value);
+      bufferCount = CStringInitializeWithFormat(buffer, "%lf", value);
 
       i += 1;
-      needsDeallocate = false;
+      needsDeallocate = no;
     } else if (format[i] == '%' && format[i + 1] == '@') {
       let value = CVariableArgumentListGetNextArgument(
         arguments,
@@ -131,7 +131,7 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
       CoreFoundationRelease(descriptionString);
 
       i += 1;
-      needsDeallocate = true;
+      needsDeallocate = yes;
     } else {
       let j = i;
       for (; j < formatCount && format[j] != '%'; j += 1);
@@ -145,7 +145,7 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
       }
 
       i = j - 1;
-      needsDeallocate = true;
+      needsDeallocate = yes;
     }
 
     /* Append the buffer to cString. */

@@ -19,30 +19,48 @@
 
 #include "CoreFoundationIO.h"
 
+#include "../Base/CoreFoundationObject.h"
+
 C_ASSUME_NONNULL_BEGIN
 
 CInteger8 CoreFoundationIOByteBuffer[1048576]; /* FIXME: Not thread-safe. */
 
-CoreFoundationNumber* nillable CoreFoundationIOScanInteger() {
-  let buffer = 0ll;
-  if (CIOScanWithFormat("%lld", &buffer) == 1) {
-    let number = CoreFoundationNumberInitializeWithInteger(buffer);
+CoreFoundationNumber* nillable CoreFoundationIOScanNumber(
+  CoreFoundationNumberType type
+) {
+  switch (type) {
+    case kCoreFoundationNumberTypeInteger64: {
+      let buffer = 0ll;
+      if (CIOScanWithFormat("%lld", &buffer) == 1) {
+        let number = CoreFoundationNumberInitialize(type, &buffer);
 
-    return number;
+        return number;
+      }
+      break;
+    }
+
+    case kCoreFoundationNumberTypeUnsignedInteger64: {
+      let buffer = 0ull;
+      if (CIOScanWithFormat("%llu", &buffer) == 1) {
+        let number = CoreFoundationNumberInitialize(type, &buffer);
+
+        return number;
+      }
+      break;
+    }
+
+    case kCoreFoundationNumberTypeFloatingPoint64: {
+      let buffer = 0.0;
+      if (CIOScanWithFormat("%lf", &buffer) == 1) {
+        let number = CoreFoundationNumberInitialize(type, &buffer);
+
+        return number;
+      }
+      break;
+    }
   }
 
-  return NULL;
-}
-
-CoreFoundationNumber* nillable CoreFoundationIOScanUnsignedInteger() {
-  let buffer = 0ull;
-  if (CIOScanWithFormat("%llu", &buffer) == 1) {
-    let number = CoreFoundationNumberInitializeWithUnsignedInteger(buffer);
-
-    return number;
-  }
-
-  return NULL;
+  return null;
 }
 
 CoreFoundationString* nillable CoreFoundationIOScanString() {
@@ -54,31 +72,50 @@ CoreFoundationString* nillable CoreFoundationIOScanString() {
     return string;
   }
 
-  return NULL;
+  return null;
 }
 
-void CoreFoundationIOPrintInteger(
+void CoreFoundationIOPrintNumber(
   CoreFoundationNumber* number,
   CString terminator
 ) {
-  let buffer = CoreFoundationNumberGetIntegerValue(number);
+  CoreFoundationRetain(number);
 
-  CIOPrintWithFormat("%lld%s", buffer, terminator);
-}
+  let type = CoreFoundationNumberGetType(number);
+  switch (type) {
+    case kCoreFoundationNumberTypeInteger64: {
+      let buffer = 0ll;
+      CoreFoundationNumberGetValue(number, type, &buffer);
+      CIOPrintWithFormat("%lld", buffer);
+      break;
+    }
 
-void CoreFoundationIOPrintUnsignedInteger(
-  CoreFoundationNumber* number,
-  CString terminator
-) {
-  let buffer = CoreFoundationNumberGetUnsignedIntegerValue(number);
+    case kCoreFoundationNumberTypeUnsignedInteger64: {
+      let buffer = 0ull;
+      CoreFoundationNumberGetValue(number, type, &buffer);
+      CIOPrintWithFormat("%llu", buffer);
+      break;
+    }
 
-  CIOPrintWithFormat("%llu%s", buffer, terminator);
+    case kCoreFoundationNumberTypeFloatingPoint64: {
+      let buffer = 0.0;
+      CoreFoundationNumberGetValue(number, type, &buffer);
+      CIOPrintWithFormat("%lf", buffer);
+      break;
+    }
+  }
+
+  CIOPrintWithFormat("%s", terminator);
+
+  CoreFoundationRelease(number);
 }
 
 void CoreFoundationIOPrintString(
   CoreFoundationString* string,
   CString terminator
 ) {
+  CoreFoundationRetain(string);
+
   /* FIXME: These buffers may overflow. */
   CInteger32 characters[1024];
   let _characters = (const CInteger32*)characters;
@@ -93,6 +130,8 @@ void CoreFoundationIOPrintString(
   );
 
   CIOPrintWithFormat("%s%s", buffer, terminator);
+
+  CoreFoundationRelease(string);
 }
 
 C_ASSUME_NONNULL_END
