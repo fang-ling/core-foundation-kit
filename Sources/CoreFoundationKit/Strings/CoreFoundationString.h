@@ -44,6 +44,12 @@ CoreFoundationStringInitializeWithCString(CString cString);
 CoreFoundationString* nillable
 CoreFoundationStringInitializeWithFormat(CString format, ...);
 
+CoreFoundationString* nillable
+CoreFoundationStringInitializeWithFormatAndArguments(
+  CString format,
+  CVariableArgumentList arguments
+);
+
 CUnsignedInteger64 CoreFoundationStringGetCount(CoreFoundationString* string);
 
 CInteger32 CoreFoundationStringGetCharacterAtIndex(

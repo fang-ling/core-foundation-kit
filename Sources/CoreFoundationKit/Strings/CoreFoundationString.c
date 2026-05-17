@@ -26,6 +26,9 @@ C_ASSUME_NONNULL_BEGIN
 #ifndef ONLINE_JUDGE
   extern CoreFoundationAnyObject*
   FoundationCoreFoundationStringInitializeWithCString(CString cString);
+
+  extern CoreFoundationAnyObject*
+  ObjectiveCObjectCopyDescription(CoreFoundationAnyObject* object);
 #endif /* !ONLINE_JUDGE */
 
 struct CoreFoundationString {
@@ -33,7 +36,7 @@ struct CoreFoundationString {
 
   CInteger32* characters;
   CUnsignedInteger64 count;
-};
+} C_PACKED_STRUCT;
 
 CoreFoundationString* nillable
 CoreFoundationStringInitializeWithCString(CString cString) {
@@ -74,6 +77,20 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
   let arguments = (CVariableArgumentList){ 0 };
   CVariableArgumentListInitialize(arguments, format);
 
+  let string = CoreFoundationStringInitializeWithFormatAndArguments(
+    format,
+    arguments
+  );
+
+  CVariableArgumentListDeinitialize(arguments);
+  return string;
+}
+
+CoreFoundationString* nillable
+CoreFoundationStringInitializeWithFormatAndArguments(
+  CString format,
+  CVariableArgumentList arguments
+) {
   let cString = (CInteger8*)CMemoryAllocate(1 * sizeof(CInteger8));
   let cStringCapacity = 1ll;
   let cStringCount = 0ll;
@@ -111,9 +128,14 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
       );
       CoreFoundationRetain(value);
 
+#ifdef ONLINE_JUDGE
       let typeID = ((CoreFoundationObject*)value)->typeID;
       let class = CoreFoundationClassTable[typeID];
       let descriptionString = class.copyDescription(value);
+#else
+      let descriptionString =
+        (CoreFoundationString*)ObjectiveCObjectCopyDescription(value);
+#endif
 
       buffer = (CInteger8*)CMemoryAllocate(
         (descriptionString->count * 4 + 1) * sizeof(CInteger8)
@@ -164,7 +186,6 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
       CMemoryDeallocate(buffer);
     }
   }
-  CVariableArgumentListDeinitialize(arguments);
 
   cString[cStringCount] = '\0';
   let string = CoreFoundationStringInitializeWithCString(cString);

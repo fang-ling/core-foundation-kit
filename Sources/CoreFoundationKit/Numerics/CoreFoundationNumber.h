@@ -80,7 +80,6 @@ CoreFoundationNumber* CoreFoundationNumberInitialize(
  */
 void CoreFoundationNumberGetValue(
   CoreFoundationNumber* number,
-  CoreFoundationNumberType type,
   void* valueBuffer
 );
 

@@ -71,7 +71,7 @@ CoreFoundationNumber* CoreFoundationNumberInitialize(
 
   return number;
 #else
-  return FoundationCoreFoundationNumberInitialize(type, value);
+  return FoundationCoreFoundationNumberInitialize(type, valueBuffer);
 #endif
 }
 
@@ -116,12 +116,11 @@ CoreFoundationNumberCopyDescription(CoreFoundationAnyObject* number) {
 
 void CoreFoundationNumberGetValue(
   CoreFoundationNumber* number,
-  CoreFoundationNumberType type,
   void* valueBuffer
 ) {
   CoreFoundationRetain(number);
 
-  switch (type) {
+  switch (number->type) {
     case kCoreFoundationNumberTypeInteger64:
       *(CInteger64*)valueBuffer = number->value.integer64;
       break;

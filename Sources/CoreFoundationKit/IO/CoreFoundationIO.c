@@ -85,21 +85,21 @@ void CoreFoundationIOPrintNumber(
   switch (type) {
     case kCoreFoundationNumberTypeInteger64: {
       let buffer = 0ll;
-      CoreFoundationNumberGetValue(number, type, &buffer);
+      CoreFoundationNumberGetValue(number, &buffer);
       CIOPrintWithFormat("%lld", buffer);
       break;
     }
 
     case kCoreFoundationNumberTypeUnsignedInteger64: {
       let buffer = 0ull;
-      CoreFoundationNumberGetValue(number, type, &buffer);
+      CoreFoundationNumberGetValue(number, &buffer);
       CIOPrintWithFormat("%llu", buffer);
       break;
     }
 
     case kCoreFoundationNumberTypeFloatingPoint64: {
       let buffer = 0.0;
-      CoreFoundationNumberGetValue(number, type, &buffer);
+      CoreFoundationNumberGetValue(number, &buffer);
       CIOPrintWithFormat("%lf", buffer);
       break;
     }
