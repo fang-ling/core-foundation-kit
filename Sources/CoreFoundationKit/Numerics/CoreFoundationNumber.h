@@ -74,8 +74,6 @@ CoreFoundationNumber* CoreFoundationNumberInitialize(
  *
  * - Parameters:
  *   - number: The ``CoreFoundationNumber`` object to examine.
- *   - type: A constant that specifies the data type to return. See
- *     ``CoreFoundationNumberType`` for a list of possible values.
  *   - valueBuffer: On return, contains the value of number.
  */
 void CoreFoundationNumberGetValue(
