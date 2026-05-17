@@ -24,12 +24,9 @@
 C_ASSUME_NONNULL_BEGIN
 
 #ifndef ONLINE_JUDGE
-  extern CoreFoundationAnyObject*
-  FoundationCoreFoundationNumberInitializeWithInteger(CInteger64 value);
-
-  extern CoreFoundationAnyObject*
-  FoundationCoreFoundationNumberInitializeWithUnsignedInteger(
-    CUnsignedInteger64 value
+  extern CoreFoundationAnyObject* FoundationCoreFoundationNumberInitialize(
+    CoreFoundationNumberType type,
+    void* valueBuffer
   );
 #endif /* !ONLINE_JUDGE */
 
@@ -39,67 +36,123 @@ struct CoreFoundationNumber {
   union {
     CInteger64 integer64;
     CUnsignedInteger64 unsignedInteger64;
+    CFloatingPoint64 floatingPoint64;
   } value;
+
+  CoreFoundationNumberType type;
 };
 
-CoreFoundationNumber*
-CoreFoundationNumberInitializeWithInteger(CInteger64 value) {
+CoreFoundationNumber* CoreFoundationNumberInitialize(
+  CoreFoundationNumberType type,
+  void* valueBuffer
+) {
 #ifdef ONLINE_JUDGE
   let size = sizeof(CoreFoundationNumber);
   let number = (CoreFoundationNumber*)CMemoryAllocate(size);
 
-  number->object.isa = NULL;
+  number->object.isa = null;
   number->object.referenceCount = 1;
   number->object.typeID = kCoreFoundationTypeIDNumber;
 
-  number->value.integer64 = value;
+  number->type = type;
+  switch (type) {
+    case kCoreFoundationNumberTypeInteger64:
+      number->value.integer64 = *(CInteger64*)valueBuffer;
+      break;
+
+    case kCoreFoundationNumberTypeUnsignedInteger64:
+      number->value.unsignedInteger64 = *(CUnsignedInteger64*)valueBuffer;
+      break;
+
+    case kCoreFoundationNumberTypeFloatingPoint64:
+      number->value.floatingPoint64 = *(CFloatingPoint64*)valueBuffer;
+      break;
+  }
 
   return number;
 #else
-  return FoundationCoreFoundationNumberInitializeWithInteger(value);
+  return FoundationCoreFoundationNumberInitialize(type, valueBuffer);
 #endif
 }
 
-CoreFoundationNumber*
-CoreFoundationNumberInitializeWithUnsignedInteger(CUnsignedInteger64 value) {
-#ifdef ONLINE_JUDGE
-  let size = sizeof(CoreFoundationNumber);
-  let number = (CoreFoundationNumber*)CMemoryAllocate(size);
-
-  number->object.isa = NULL;
-  number->object.referenceCount = 1;
-  number->object.typeID = kCoreFoundationTypeIDNumber;
-
-  number->value.unsignedInteger64 = value;
-
-  return number;
-#else
-  return FoundationCoreFoundationNumberInitializeWithUnsignedInteger(value);
-#endif
-}
-
-CInteger64 CoreFoundationNumberGetIntegerValue(CoreFoundationNumber* number) {
+CoreFoundationString*
+CoreFoundationNumberCopyDescription(CoreFoundationAnyObject* number) {
   CoreFoundationRetain(number);
 
-  let value = number->value.integer64;
+  let buffer = (CInteger8 [128]){ 0 };
+
+  switch (((CoreFoundationNumber*)number)->type) {
+    case kCoreFoundationNumberTypeInteger64:
+      CStringInitializeWithFormat(
+        buffer,
+        "%lld",
+        ((CoreFoundationNumber*)number)->value.integer64
+      );
+      break;
+
+    case kCoreFoundationNumberTypeUnsignedInteger64:
+      CStringInitializeWithFormat(
+        buffer,
+        "%llu",
+        ((CoreFoundationNumber*)number)->value.unsignedInteger64
+      );
+      break;
+
+    case kCoreFoundationNumberTypeFloatingPoint64:
+      CStringInitializeWithFormat(
+        buffer,
+        "%lf",
+        ((CoreFoundationNumber*)number)->value.floatingPoint64
+      );
+      break;
+  }
+
+  let descriptionString = CoreFoundationStringInitializeWithCString(buffer);
 
   CoreFoundationRelease(number);
-  return value;
+
+  return descriptionString;
 }
 
-CUnsignedInteger64
-CoreFoundationNumberGetUnsignedIntegerValue(CoreFoundationNumber* number) {
+void CoreFoundationNumberGetValue(
+  CoreFoundationNumber* number,
+  void* valueBuffer
+) {
   CoreFoundationRetain(number);
 
-  let value = number->value.unsignedInteger64;
+  switch (number->type) {
+    case kCoreFoundationNumberTypeInteger64:
+      *(CInteger64*)valueBuffer = number->value.integer64;
+      break;
+
+    case kCoreFoundationNumberTypeUnsignedInteger64:
+      *(CUnsignedInteger64*)valueBuffer = number->value.unsignedInteger64;
+      break;
+
+    case kCoreFoundationNumberTypeFloatingPoint64:
+      *(CFloatingPoint64*)valueBuffer = number->value.floatingPoint64;
+      break;
+  }
 
   CoreFoundationRelease(number);
-  return value;
+}
+
+CoreFoundationNumberType CoreFoundationNumberGetType(
+  CoreFoundationNumber* number
+) {
+  CoreFoundationRetain(number);
+
+  let type = number->type;
+
+  CoreFoundationRelease(number);
+  return type;
 }
 
 C_INITIALIZER
 void CoreFoundationNumberRegisterClass() {
-  CoreFoundationClassTable[kCoreFoundationTypeIDNumber].deinitialize = NULL;
+  CoreFoundationClassTable[kCoreFoundationTypeIDNumber].deinitialize = null;
+  CoreFoundationClassTable[kCoreFoundationTypeIDNumber].copyDescription =
+    CoreFoundationNumberCopyDescription;
 }
 
 C_ASSUME_NONNULL_END

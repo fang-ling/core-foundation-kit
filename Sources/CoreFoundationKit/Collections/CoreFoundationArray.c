@@ -32,7 +32,7 @@ CoreFoundationArray* CoreFoundationArrayInitialize() {
   let size = sizeof(CoreFoundationArray);
   let array = (CoreFoundationArray*)CMemoryAllocate(size);
 
-  array->object.isa = NULL;
+  array->object.isa = null;
   array->object.referenceCount = 1;
   array->object.typeID = kCoreFoundationTypeIDArray;
 

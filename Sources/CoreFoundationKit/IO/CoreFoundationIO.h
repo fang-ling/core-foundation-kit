@@ -27,18 +27,13 @@
 
 C_ASSUME_NONNULL_BEGIN
 
-CoreFoundationNumber* nillable CoreFoundationIOScanInteger();
-
-CoreFoundationNumber* nillable CoreFoundationIOScanUnsignedInteger();
+CoreFoundationNumber* nillable CoreFoundationIOScanNumber(
+  CoreFoundationNumberType type
+);
 
 CoreFoundationString* nillable CoreFoundationIOScanString();
 
-void CoreFoundationIOPrintInteger(
-  CoreFoundationNumber* number,
-  CString terminator
-);
-
-void CoreFoundationIOPrintUnsignedInteger(
+void CoreFoundationIOPrintNumber(
   CoreFoundationNumber* number,
   CString terminator
 );

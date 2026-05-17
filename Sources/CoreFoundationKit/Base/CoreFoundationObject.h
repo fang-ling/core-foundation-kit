@@ -31,6 +31,10 @@ typedef void CoreFoundationAnyObject;
 typedef struct _CoreFoundationObject {
   void* isa;
 
+#ifdef __wasi__
+  CInteger32 padding;
+#endif
+
 #ifdef ONLINE_JUDGE
   CUnsignedInteger32 referenceCount;
 

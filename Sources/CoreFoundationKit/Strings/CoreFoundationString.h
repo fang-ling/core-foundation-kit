@@ -38,11 +38,17 @@ CoreFoundationStringInitializeWithCString(CString cString);
  * - Parameter format: The formatted string with `printf`-style specifiers
  *   followed by the variable argument list of values.
  *
- * - Returns An immutable string, or `NULL` if there was a problem creating the
+ * - Returns An immutable string, or `null` if there was a problem creating the
  *   object.
  */
 CoreFoundationString* nillable
 CoreFoundationStringInitializeWithFormat(CString format, ...);
+
+CoreFoundationString* nillable
+CoreFoundationStringInitializeWithFormatAndArguments(
+  CString format,
+  CVariableArgumentList arguments
+);
 
 CUnsignedInteger64 CoreFoundationStringGetCount(CoreFoundationString* string);
 

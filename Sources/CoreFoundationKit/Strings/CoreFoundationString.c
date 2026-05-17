@@ -26,6 +26,9 @@ C_ASSUME_NONNULL_BEGIN
 #ifndef ONLINE_JUDGE
   extern CoreFoundationAnyObject*
   FoundationCoreFoundationStringInitializeWithCString(CString cString);
+
+  extern CoreFoundationAnyObject*
+  ObjectiveCObjectCopyDescription(CoreFoundationAnyObject* object);
 #endif /* !ONLINE_JUDGE */
 
 struct CoreFoundationString {
@@ -33,7 +36,7 @@ struct CoreFoundationString {
 
   CInteger32* characters;
   CUnsignedInteger64 count;
-};
+} C_PACKED_STRUCT;
 
 CoreFoundationString* nillable
 CoreFoundationStringInitializeWithCString(CString cString) {
@@ -41,7 +44,7 @@ CoreFoundationStringInitializeWithCString(CString cString) {
   let size = sizeof(CoreFoundationString);
   let string = (CoreFoundationString*)CMemoryAllocate(size);
 
-  string->object.isa = NULL;
+  string->object.isa = null;
   string->object.referenceCount = 1;
   string->object.typeID = kCoreFoundationTypeIDString;
 
@@ -58,7 +61,7 @@ CoreFoundationStringInitializeWithCString(CString cString) {
     CMemoryDeallocate(string->characters);
     CMemoryDeallocate(string);
 
-    return NULL;
+    return null;
   }
 
   string->count = count;
@@ -74,6 +77,20 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
   let arguments = (CVariableArgumentList){ 0 };
   CVariableArgumentListInitialize(arguments, format);
 
+  let string = CoreFoundationStringInitializeWithFormatAndArguments(
+    format,
+    arguments
+  );
+
+  CVariableArgumentListDeinitialize(arguments);
+  return string;
+}
+
+CoreFoundationString* nillable
+CoreFoundationStringInitializeWithFormatAndArguments(
+  CString format,
+  CVariableArgumentList arguments
+) {
   let cString = (CInteger8*)CMemoryAllocate(1 * sizeof(CInteger8));
   let cStringCapacity = 1ll;
   let cStringCount = 0ll;
@@ -81,18 +98,18 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
   let formatCount = CStringGetCount(format);
   let i = 0ll;
   for (; i < formatCount; i += 1) {
-    let buffer = (CInteger8*)NULL;
+    let buffer = (CInteger8*)null;
     let bufferCount = 0ll;
-    let needsDeallocate = false;
+    let needsDeallocate = no;
 
     if (format[i] == '%' && format[i + 1] == 'd') {
       let value = CVariableArgumentListGetNextArgument(arguments, CInteger64);
 
       buffer = (CInteger8 [32]){ 0 };
-      bufferCount = CIOPrintToStringWithFormat(buffer, "%lld", value);
+      bufferCount = CStringInitializeWithFormat(buffer, "%lld", value);
 
       i += 1;
-      needsDeallocate = false;
+      needsDeallocate = no;
     } else if (format[i] == '%' && format[i + 1] == 'f') {
       let value = CVariableArgumentListGetNextArgument(
         arguments,
@@ -100,10 +117,10 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
       );
 
       buffer = (CInteger8 [32]){ 0 };
-      bufferCount = CIOPrintToStringWithFormat(buffer, "%lf", value);
+      bufferCount = CStringInitializeWithFormat(buffer, "%lf", value);
 
       i += 1;
-      needsDeallocate = false;
+      needsDeallocate = no;
     } else if (format[i] == '%' && format[i + 1] == '@') {
       let value = CVariableArgumentListGetNextArgument(
         arguments,
@@ -111,9 +128,14 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
       );
       CoreFoundationRetain(value);
 
+#ifdef ONLINE_JUDGE
       let typeID = ((CoreFoundationObject*)value)->typeID;
       let class = CoreFoundationClassTable[typeID];
       let descriptionString = class.copyDescription(value);
+#else
+      let descriptionString =
+        (CoreFoundationString*)ObjectiveCObjectCopyDescription(value);
+#endif
 
       buffer = (CInteger8*)CMemoryAllocate(
         (descriptionString->count * 4 + 1) * sizeof(CInteger8)
@@ -131,7 +153,7 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
       CoreFoundationRelease(descriptionString);
 
       i += 1;
-      needsDeallocate = true;
+      needsDeallocate = yes;
     } else {
       let j = i;
       for (; j < formatCount && format[j] != '%'; j += 1);
@@ -145,7 +167,7 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
       }
 
       i = j - 1;
-      needsDeallocate = true;
+      needsDeallocate = yes;
     }
 
     /* Append the buffer to cString. */
@@ -164,7 +186,6 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
       CMemoryDeallocate(buffer);
     }
   }
-  CVariableArgumentListDeinitialize(arguments);
 
   cString[cStringCount] = '\0';
   let string = CoreFoundationStringInitializeWithCString(cString);

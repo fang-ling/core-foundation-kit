@@ -29,9 +29,9 @@ C_ASSUME_NONNULL_BEGIN
 CoreFoundationClass CoreFoundationClassTable[256];
 
 void CoreFoundationRetain(CoreFoundationAnyObject* object) {
-  if (object == NULL) {
+  if (object == null) {
     CDebuggingHaltWithMessage(
-      "*** CoreFoundationRetain() CALLED WITH NULL. ***"
+      "*** CoreFoundationRetain() CALLED WITH null. ***"
     );
   }
 
@@ -43,9 +43,9 @@ void CoreFoundationRetain(CoreFoundationAnyObject* object) {
 }
 
 void CoreFoundationRelease(CoreFoundationAnyObject* object) {
-  if (object == NULL) {
+  if (object == null) {
     CDebuggingHaltWithMessage(
-      "*** CoreFoundationRelease() CALLED WITH NULL. ***"
+      "*** CoreFoundationRelease() CALLED WITH null. ***"
     );
   }
 
