@@ -116,20 +116,17 @@ void CoreFoundationIOPrintString(
 ) {
   CoreFoundationRetain(string);
 
-  /* FIXME: These buffers may overflow. */
-  CInteger32 characters[1024];
-  let _characters = (const CInteger32*)characters;
-  CInteger8 buffer[1024] = { 0 };
+  let count = CoreFoundationStringGetCount(string);
 
-  CoreFoundationStringCopyCharacters(string, characters);
-  CStringConvertUTF32CharactersToUTF8Characters(
-    buffer,
-    &_characters,
-    CoreFoundationStringGetCount(string),
-    1024
+  let bufferCount = CoreFoundationStringGetCStringCount(string);
+  let buffer = (CInteger8*)CMemoryAllocate(
+    (bufferCount + 1) * sizeof(CInteger8)
   );
+  CoreFoundationStringCopyCString(string, buffer);
 
   CIOPrintWithFormat("%s%s", buffer, terminator);
+
+  CMemoryDeallocate(buffer);
 
   CoreFoundationRelease(string);
 }

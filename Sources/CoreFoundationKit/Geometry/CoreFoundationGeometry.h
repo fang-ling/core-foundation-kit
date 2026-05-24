@@ -39,6 +39,46 @@ typedef struct CoreFoundationRectangle {
   CoreFoundationSize size;
 } CoreFoundationRectangle;
 
+/**
+ * Returns a point with the specified coordinates.
+ *
+ * - Parameters:
+ *   - x: The x-coordinate of the point to construct.
+ *   - y: The y-coordinate of the point to construct.
+ *
+ * - Returns: A point.
+ */
+#define CoreFoundationPointMake(x, y) \
+  ((CoreFoundationPoint){ .x = (x), .y = (y) })
+
+/**
+ * Returns a size with the specified dimension values.
+ *
+ * - Parameters:
+ *   - width: A width value.
+ *   - height: A height value.
+ *
+ * - Returns: Returns a size structure with the specified width and height.
+ */
+#define CoreFoundationSizeMake(width, height) \
+  ((CoreFoundationSize){ .width = (width), .height = (height) })
+
+/**
+ * Returns a rectangle with the specified coordinate and size values.
+ *
+ * - Parameters:
+ *   - x: The x-coordinate of the rectangle's origin point.
+ *   - y: The y-coordinate of the rectangle's origin point.
+ *   - width: The width of the rectangle.
+ *   - height: The height of the rectangle.
+ *
+ * - Returns: A rectangle with the specified location and dimensions.
+ */
+#define CoreFoundationRectangleMake(x, y, width, height) \
+  ((CoreFoundationRectangle){ \
+    .origin = (CoreFoundationPoint){ (x), (y) }, \
+    .size = (CoreFoundationSize){ (width), (height) } })
+
 CBoolean CoreFoundationPointEqual(
   CoreFoundationPoint lhs,
   CoreFoundationPoint rhs

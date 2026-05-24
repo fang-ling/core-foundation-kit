@@ -48,10 +48,6 @@ let package = Package(
       ],
       publicHeadersPath: "Includes",
       cSettings: isOnlineJudge ? [.define("ONLINE_JUDGE")] : []
-    ),
-    .testTarget(
-      name: "CoreFoundationKitTests",
-      dependencies: ["CoreFoundationKit"]
     )
   ],
   cLanguageStandard: .c89

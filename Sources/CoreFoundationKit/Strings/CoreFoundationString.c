@@ -36,7 +36,7 @@ struct CoreFoundationString {
 
   CInteger32* characters;
   CUnsignedInteger64 count;
-} C_PACKED_STRUCT;
+};
 
 CoreFoundationString* nillable
 CoreFoundationStringInitializeWithCString(CString cString) {
@@ -49,15 +49,22 @@ CoreFoundationStringInitializeWithCString(CString cString) {
   string->object.typeID = kCoreFoundationTypeIDString;
 
   let cStringCount = CStringGetCount(cString);
-  string->characters = CMemoryAllocate(cStringCount * sizeof(CInteger32));
-
   let count = CStringConvertUTF8CharactersToUTF32Characters(
-    string->characters,
-    &cString,
+    null,
+    cString,
     cStringCount,
-    cStringCount
+    0
   );
-  if (count == -1) {
+
+  string->characters = CMemoryAllocate(count * sizeof(CInteger32));
+
+  CStringConvertUTF8CharactersToUTF32Characters(
+    string->characters,
+    cString,
+    cStringCount,
+    count
+  );
+  if (count == -1ull) {
     CMemoryDeallocate(string->characters);
     CMemoryDeallocate(string);
 
@@ -72,25 +79,12 @@ CoreFoundationStringInitializeWithCString(CString cString) {
 #endif
 }
 
+#ifdef ONLINE_JUDGE
 CoreFoundationString* nillable
 CoreFoundationStringInitializeWithFormat(CString format, ...) {
   let arguments = (CVariableArgumentList){ 0 };
   CVariableArgumentListInitialize(arguments, format);
 
-  let string = CoreFoundationStringInitializeWithFormatAndArguments(
-    format,
-    arguments
-  );
-
-  CVariableArgumentListDeinitialize(arguments);
-  return string;
-}
-
-CoreFoundationString* nillable
-CoreFoundationStringInitializeWithFormatAndArguments(
-  CString format,
-  CVariableArgumentList arguments
-) {
   let cString = (CInteger8*)CMemoryAllocate(1 * sizeof(CInteger8));
   let cStringCapacity = 1ll;
   let cStringCount = 0ll;
@@ -128,26 +122,15 @@ CoreFoundationStringInitializeWithFormatAndArguments(
       );
       CoreFoundationRetain(value);
 
-#ifdef ONLINE_JUDGE
       let typeID = ((CoreFoundationObject*)value)->typeID;
       let class = CoreFoundationClassTable[typeID];
       let descriptionString = class.copyDescription(value);
-#else
-      let descriptionString =
-        (CoreFoundationString*)ObjectiveCObjectCopyDescription(value);
-#endif
 
+      bufferCount = CoreFoundationStringGetCStringCount(descriptionString);
       buffer = (CInteger8*)CMemoryAllocate(
-        (descriptionString->count * 4 + 1) * sizeof(CInteger8)
+        (bufferCount + 1) * sizeof(CInteger8)
       );
-      let characters = (const CInteger32*)descriptionString->characters;
-      bufferCount = CStringConvertUTF32CharactersToUTF8Characters(
-        buffer,
-        &characters,
-        descriptionString->count,
-        descriptionString->count * 4
-      );
-      buffer[bufferCount] = '\0';
+      CoreFoundationStringCopyCString(descriptionString, buffer);
 
       CoreFoundationRelease(value);
       CoreFoundationRelease(descriptionString);
@@ -192,8 +175,11 @@ CoreFoundationStringInitializeWithFormatAndArguments(
 
   CMemoryDeallocate(cString);
 
+  CVariableArgumentListDeinitialize(arguments);
+
   return string;
 }
+#endif /* ONLINE_JUDGE */
 
 void CoreFoundationStringDeinitialize(CoreFoundationAnyObject* string) {
   CMemoryDeallocate(((CoreFoundationString*)string)->characters);
@@ -221,8 +207,23 @@ CoreFoundationStringCopyDescription(CoreFoundationAnyObject* string) {
 
 CUnsignedInteger64 CoreFoundationStringGetCount(CoreFoundationString* string) {
   CoreFoundationRetain(string);
-
   let count = string->count;
+
+  CoreFoundationRelease(string);
+
+  return count;
+}
+
+CUnsignedInteger64
+CoreFoundationStringGetCStringCount(CoreFoundationString* string) {
+  CoreFoundationRetain(string);
+
+  let count = CStringConvertUTF32CharactersToUTF8Characters(
+    null,
+    string->characters,
+    string->count,
+    0
+  );
 
   CoreFoundationRelease(string);
 
@@ -253,6 +254,23 @@ void CoreFoundationStringCopyCharacters(
     string->characters,
     string->count * sizeof(CInteger32)
   );
+
+  CoreFoundationRelease(string);
+}
+
+void CoreFoundationStringCopyCString(
+  CoreFoundationString* string,
+  CInteger8* cString
+) {
+  CoreFoundationRetain(string);
+
+  let count = CStringConvertUTF32CharactersToUTF8Characters(
+    cString,
+    string->characters,
+    string->count,
+    string->count
+  );
+  cString[count] = '\0';
 
   CoreFoundationRelease(string);
 }
