@@ -44,13 +44,13 @@ CoreFoundationStringInitializeWithCString(CString cString);
 CoreFoundationString* nillable
 CoreFoundationStringInitializeWithFormat(CString format, ...);
 
-CoreFoundationString* nillable
-CoreFoundationStringInitializeWithFormatAndArguments(
-  CString format,
-  CVariableArgumentList arguments
-);
-
 CUnsignedInteger64 CoreFoundationStringGetCount(CoreFoundationString* string);
+
+/**
+ * Returns the number of characters in the C-string representation.
+ */
+CUnsignedInteger64
+CoreFoundationStringGetCStringCount(CoreFoundationString* string);
 
 CInteger32 CoreFoundationStringGetCharacterAtIndex(
   CoreFoundationString* string,
@@ -60,6 +60,20 @@ CInteger32 CoreFoundationStringGetCharacterAtIndex(
 void CoreFoundationStringCopyCharacters(
   CoreFoundationString* string,
   CInteger32* characters
+);
+
+/**
+ * Copies the character contents of a string to a C string buffer
+ *
+ * - Parameters:
+ *   - string: The string whose contents you wish to access.
+ *   - cString: The C string buffer into which to copy the string. The buffer
+ *     must be large enough to contain the converted characters and a `null`
+ *     terminator.
+ */
+void CoreFoundationStringCopyCString(
+  CoreFoundationString* string,
+  CInteger8* cString
 );
 
 CoreFoundationComparisonResult CoreFoundationStringCompare(
