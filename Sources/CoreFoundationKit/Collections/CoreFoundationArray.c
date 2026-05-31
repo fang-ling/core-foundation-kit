@@ -55,7 +55,7 @@ void CoreFoundationArrayDeinitialize(CoreFoundationAnyObject* array) {
   CMemoryDeallocate(((CoreFoundationArray*)array)->objects);
 }
 
-CUnsignedInteger64 CoreFoundationArrayGetCount(CoreFoundationArray* array) {
+CInteger CoreFoundationArrayGetCount(CoreFoundationArray* array) {
   CoreFoundationRetain(array);
 
   let count = array->count;
@@ -67,7 +67,7 @@ CUnsignedInteger64 CoreFoundationArrayGetCount(CoreFoundationArray* array) {
 
 CoreFoundationAnyObject* CoreFoundationArrayGetObjectAtIndex(
   CoreFoundationArray* array,
-  CUnsignedInteger64 index
+  CInteger index
 ) {
   return array->objects[index];
 }

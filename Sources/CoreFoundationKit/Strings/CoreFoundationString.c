@@ -35,7 +35,7 @@ struct CoreFoundationString {
   CoreFoundationObject object;
 
   CInteger32* characters;
-  CUnsignedInteger64 count;
+  CInteger count;
 };
 
 CoreFoundationString* nillable
@@ -97,17 +97,17 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
     let needsDeallocate = no;
 
     if (format[i] == '%' && format[i + 1] == 'd') {
-      let value = CVariableArgumentListGetNextArgument(arguments, CInteger64);
+      let value = CVariableArgumentListGetNextArgument(arguments, CInteger);
 
       buffer = (CInteger8 [32]){ 0 };
-      bufferCount = CStringInitializeWithFormat(buffer, "%lld", value);
+      bufferCount = CStringInitializeWithFormat(buffer, "%ld", value);
 
       i += 1;
       needsDeallocate = no;
     } else if (format[i] == '%' && format[i + 1] == 'f') {
       let value = CVariableArgumentListGetNextArgument(
         arguments,
-        CFloatingPoint64
+        CFloatingPoint
       );
 
       buffer = (CInteger8 [32]){ 0 };
@@ -205,7 +205,7 @@ CoreFoundationStringCopyDescription(CoreFoundationAnyObject* string) {
   return copy;
 }
 
-CUnsignedInteger64 CoreFoundationStringGetCount(CoreFoundationString* string) {
+CInteger CoreFoundationStringGetCount(CoreFoundationString* string) {
   CoreFoundationRetain(string);
   let count = string->count;
 
@@ -214,7 +214,7 @@ CUnsignedInteger64 CoreFoundationStringGetCount(CoreFoundationString* string) {
   return count;
 }
 
-CUnsignedInteger64
+CInteger
 CoreFoundationStringGetCStringCount(CoreFoundationString* string) {
   CoreFoundationRetain(string);
 
@@ -232,7 +232,7 @@ CoreFoundationStringGetCStringCount(CoreFoundationString* string) {
 
 CInteger32 CoreFoundationStringGetCharacterAtIndex(
   CoreFoundationString* string,
-  CUnsignedInteger64 index
+  CInteger index
 ) {
   CoreFoundationRetain(string);
 

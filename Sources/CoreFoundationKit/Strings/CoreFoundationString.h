@@ -20,9 +20,9 @@
 #ifndef CoreFoundationString_h
 #define CoreFoundationString_h
 
-#include <CKit/CKit.h>
-
 #include "../Sorting/CoreFoundationComparisonResult.h"
+
+#include <CKit/CKit.h>
 
 C_ASSUME_NONNULL_BEGIN
 
@@ -44,17 +44,33 @@ CoreFoundationStringInitializeWithCString(CString cString);
 CoreFoundationString* nillable
 CoreFoundationStringInitializeWithFormat(CString format, ...);
 
-CUnsignedInteger64 CoreFoundationStringGetCount(CoreFoundationString* string);
+/**
+ * Returns the number of Unicode characters in a string.
+ *
+ * - Parameter string: The string to examine.
+ *
+ * - Returns: The number of characters stored in the string.
+ */
+CInteger CoreFoundationStringGetCount(CoreFoundationString* string);
 
 /**
  * Returns the number of characters in the C-string representation.
  */
-CUnsignedInteger64
+CInteger
 CoreFoundationStringGetCStringCount(CoreFoundationString* string);
 
+/**
+ * Returns the Unicode character at a specified location in a string.
+ *
+ * - Parameters:
+ *   - string: The string from which the Unicode character is obtained.
+ *   - index: The position of the Unicode character in the string.
+ *
+ * - Returns: A Unicode character.
+ */
 CInteger32 CoreFoundationStringGetCharacterAtIndex(
   CoreFoundationString* string,
-  CUnsignedInteger64 index
+  CInteger index
 );
 
 void CoreFoundationStringCopyCharacters(

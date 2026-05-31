@@ -20,10 +20,10 @@
 #ifndef CoreFoundationArray_Private_h
 #define CoreFoundationArray_Private_h
 
-#include <CKit/CKit.h>
-
 #include "../Base/CoreFoundationObject.h"
 #include "../Numerics/CoreFoundationNumber.h"
+
+#include <CKit/CKit.h>
 
 C_ASSUME_NONNULL_BEGIN
 
@@ -31,8 +31,8 @@ struct CoreFoundationArray {
   CoreFoundationObject object;
 
   CoreFoundationAnyObject* nonnil * nonnil objects;
-  CUnsignedInteger64 count;
-  CUnsignedInteger64 capacity;
+  CInteger count;
+  CInteger capacity;
 };
 
 C_ASSUME_NONNULL_END
