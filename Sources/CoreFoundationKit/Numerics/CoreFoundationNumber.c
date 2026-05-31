@@ -56,7 +56,7 @@ CoreFoundationNumber* CoreFoundationNumberInitialize(
   CoreFoundationNumberType type,
   void* valueBuffer
 ) {
-#if defined(C_TARGET_OS_ONLINE_JUDGE)
+#if C_TARGET_OS_ONLINE_JUDGE
   let size = sizeof(CoreFoundationNumber);
   let number = (CoreFoundationNumber*)CMemoryAllocate(size);
 
