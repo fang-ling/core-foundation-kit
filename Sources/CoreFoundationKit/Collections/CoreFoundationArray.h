@@ -20,9 +20,9 @@
 #ifndef CoreFoundationArray_h
 #define CoreFoundationArray_h
 
-#include <CKit/CKit.h>
-
 #include "../Base/CoreFoundationObject.h"
+
+#include <CKit/CKit.h>
 
 C_ASSUME_NONNULL_BEGIN
 
@@ -30,11 +30,29 @@ typedef struct CoreFoundationArray CoreFoundationArray;
 
 CoreFoundationArray* CoreFoundationArrayInitialize();
 
-CUnsignedInteger64 CoreFoundationArrayGetCount(CoreFoundationArray* array);
+/**
+ * Returns the number of values currently in an array.
+ *
+ * - Parameter array: The array to examine.
+ *
+ * - Returns: The number of values in the array.
+ */
+CInteger CoreFoundationArrayGetCount(CoreFoundationArray* array);
 
+/**
+ * Retrieves an object at a given index.
+ *
+ * - Parameters:
+ *   - array: The array to examine.
+ *   - index: The index of the object to retrieve. If the index is outside the
+ *     index space of the array (`0` to `N-1` inclusive (where `N` is the count
+ *     of the array), the behavior is undefined.
+ *
+ * - Returns: The value at the index in the array.
+ */
 CoreFoundationAnyObject* CoreFoundationArrayGetObjectAtIndex(
   CoreFoundationArray* array,
-  CUnsignedInteger64 index
+  CInteger index
 );
 
 C_ASSUME_NONNULL_END

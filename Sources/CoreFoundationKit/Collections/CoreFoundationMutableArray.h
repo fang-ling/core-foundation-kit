@@ -20,9 +20,9 @@
 #ifndef CoreFoundationMutableArray_h
 #define CoreFoundationMutableArray_h
 
-#include <CKit/CKit.h>
-
 #include "CoreFoundationArray.h"
+
+#include <CKit/CKit.h>
 
 C_ASSUME_NONNULL_BEGIN
 
@@ -40,20 +40,20 @@ typedef CoreFoundationArray CoreFoundationMutableArray;
   CoreFoundationArrayGetObjectAtIndex
 
 /**
- * Changes the value at a given index in an array.
+ * Changes the object at a given index in an array.
  *
  * - Parameters:
- *   - array: The array in which the value is to be changed.
+ *   - array: The array in which the object is to be changed.
  *   - index: The index at which to set the new value. The value must not lie
  *     outside the index space of array (`0` to `N-1` inclusive, where `N` is
  *     the count of the array before the operation).
- *   - object: The value to set in the array. The value is retained by the array
- *     and the previous value at `index` is released. The indices of other
- *     values are not affected.
+ *   - object: The object to set in the array. The value is retained by the
+ *     array and the previous value at `index` is released. The indices of
+ *     other values are not affected.
  */
 void CoreFoundationMutableArraySetObjectAtIndex(
   CoreFoundationMutableArray* array,
-  CUnsignedInteger64 index,
+  CInteger index,
   CoreFoundationAnyObject* object
 );
 

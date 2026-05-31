@@ -29,10 +29,52 @@ C_ASSUME_NONNULL_BEGIN
  */
 typedef enum CoreFoundationNumberType {
   /**
+   * Eight-bit, signed integer. The ``CInteger8`` data type is defined in
+   * ``CKit``.
+   */
+  kCoreFoundationNumberTypeInteger8,
+
+  /**
+   * Sixteen-bit, signed integer. The ``CInteger16`` data type is defined in
+   * ``CKit``.
+   */
+  kCoreFoundationNumberTypeInteger16,
+
+  /**
+   * Thirty-two-bit, signed integer. The ``CInteger32`` data type is defined in
+   * ``CKit``.
+   */
+  kCoreFoundationNumberTypeInteger32,
+
+  /**
    * Sixty-four-bit, signed integer. The ``CInteger64`` data type is defined in
    * ``CKit``.
    */
   kCoreFoundationNumberTypeInteger64,
+
+  /**
+   * Platform-native signed integer. The ``CInteger`` data type is defined in
+   * ``CKit``.
+   */
+  kCoreFoundationNumberTypeInteger,
+
+  /**
+   * Eight-bit, unsigned integer. The ``CUnsignedInteger8`` data type is defined
+   * in ``CKit``.
+   */
+  kCoreFoundationNumberTypeUnsignedInteger8,
+
+  /**
+   * Sixteen-bit, unsigned integer. The ``CUnsignedInteger16`` data type is
+   * defined in ``CKit``.
+   */
+  kCoreFoundationNumberTypeUnsignedInteger16,
+
+  /**
+   * Thirty-two-bit, unsigned integer. The ``CUnsignedInteger32`` data type is
+   * defined in ``CKit``.
+   */
+  kCoreFoundationNumberTypeUnsignedInteger32,
 
   /**
    * Sixty-four-bit, unsigned integer. The ``CUnsignedInteger64`` data type is
@@ -41,10 +83,28 @@ typedef enum CoreFoundationNumberType {
   kCoreFoundationNumberTypeUnsignedInteger64,
 
   /**
+   * Platform-native unsigned integer. The ``CUnsignedInteger`` data type is
+   * defined in ``CKit``.
+   */
+  kCoreFoundationNumberTypeUnsignedInteger,
+
+  /**
+   * Thirty-two-bit real. The ``CFloatingPoint32`` data type is defined in
+   * ``CKit`` and conforms to the 32-bit IEEE 754 standard.
+   */
+  kCoreFoundationNumberTypeFloatingPoint32,
+
+  /**
    * Sixty-four-bit real. The ``CFloatingPoint64`` data type is defined in
    * ``CKit`` and conforms to the 64-bit IEEE 754 standard.
    */
   kCoreFoundationNumberTypeFloatingPoint64,
+
+  /**
+   * Platform-native real. The ``CFloatingPoint`` data type is defined in
+   * ``CKit``.
+   */
+  kCoreFoundationNumberTypeFloatingPoint,
 } CoreFoundationNumberType;
 
 typedef struct CoreFoundationNumber CoreFoundationNumber;

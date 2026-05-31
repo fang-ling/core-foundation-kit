@@ -25,13 +25,13 @@
 C_ASSUME_NONNULL_BEGIN
 
 typedef struct CoreFoundationPoint {
-  CFloatingPoint64 x;
-  CFloatingPoint64 y;
+  CFloatingPoint x;
+  CFloatingPoint y;
 } CoreFoundationPoint;
 
 typedef struct CoreFoundationSize {
-  CFloatingPoint64 width;
-  CFloatingPoint64 height;
+  CFloatingPoint width;
+  CFloatingPoint height;
 } CoreFoundationSize;
 
 typedef struct CoreFoundationRectangle {

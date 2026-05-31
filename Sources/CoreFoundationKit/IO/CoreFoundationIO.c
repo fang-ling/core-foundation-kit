@@ -23,15 +23,85 @@
 
 C_ASSUME_NONNULL_BEGIN
 
-CInteger8 CoreFoundationIOByteBuffer[1048576]; /* FIXME: Not thread-safe. */
+CInteger8 CoreFoundationIOByteBuffer[2097152]; /* FIXME: Not thread-safe. */
 
 CoreFoundationNumber* nillable CoreFoundationIOScanNumber(
   CoreFoundationNumberType type
 ) {
   switch (type) {
+    case kCoreFoundationNumberTypeInteger8: {
+      let buffer = (CInteger8)0;
+      if (CIOScanWithFormat("%hhd", &buffer) == 1) {
+        let number = CoreFoundationNumberInitialize(type, &buffer);
+
+        return number;
+      }
+      break;
+    }
+
+    case kCoreFoundationNumberTypeInteger16: {
+      let buffer = (CInteger16)0;
+      if (CIOScanWithFormat("%hd", &buffer) == 1) {
+        let number = CoreFoundationNumberInitialize(type, &buffer);
+
+        return number;
+      }
+      break;
+    }
+
+    case kCoreFoundationNumberTypeInteger32: {
+      let buffer = (CInteger32)0;
+      if (CIOScanWithFormat("%d", &buffer) == 1) {
+        let number = CoreFoundationNumberInitialize(type, &buffer);
+
+        return number;
+      }
+      break;
+    }
+
     case kCoreFoundationNumberTypeInteger64: {
       let buffer = 0ll;
       if (CIOScanWithFormat("%lld", &buffer) == 1) {
+        let number = CoreFoundationNumberInitialize(type, &buffer);
+
+        return number;
+      }
+      break;
+    }
+
+    case kCoreFoundationNumberTypeInteger: {
+      let buffer = (CInteger)0;
+      if (CIOScanWithFormat("%ld", &buffer) == 1) {
+        let number = CoreFoundationNumberInitialize(type, &buffer);
+
+        return number;
+      }
+      break;
+    }
+
+    case kCoreFoundationNumberTypeUnsignedInteger8: {
+      let buffer = (CUnsignedInteger8)0;
+      if (CIOScanWithFormat("%hhu", &buffer) == 1) {
+        let number = CoreFoundationNumberInitialize(type, &buffer);
+
+        return number;
+      }
+      break;
+    }
+
+    case kCoreFoundationNumberTypeUnsignedInteger16: {
+      let buffer = (CUnsignedInteger16)0;
+      if (CIOScanWithFormat("%hu", &buffer) == 1) {
+        let number = CoreFoundationNumberInitialize(type, &buffer);
+
+        return number;
+      }
+      break;
+    }
+
+    case kCoreFoundationNumberTypeUnsignedInteger32: {
+      let buffer = (CUnsignedInteger32)0;
+      if (CIOScanWithFormat("%u", &buffer) == 1) {
         let number = CoreFoundationNumberInitialize(type, &buffer);
 
         return number;
@@ -49,8 +119,38 @@ CoreFoundationNumber* nillable CoreFoundationIOScanNumber(
       break;
     }
 
+    case kCoreFoundationNumberTypeUnsignedInteger: {
+      let buffer = (CUnsignedInteger)0;
+      if (CIOScanWithFormat("%lu", &buffer) == 1) {
+        let number = CoreFoundationNumberInitialize(type, &buffer);
+
+        return number;
+      }
+      break;
+    }
+
+    case kCoreFoundationNumberTypeFloatingPoint32: {
+      let buffer = (CFloatingPoint32)0;
+      if (CIOScanWithFormat("%f", &buffer) == 1) {
+        let number = CoreFoundationNumberInitialize(type, &buffer);
+
+        return number;
+      }
+      break;
+    }
+
     case kCoreFoundationNumberTypeFloatingPoint64: {
       let buffer = 0.0;
+      if (CIOScanWithFormat("%lf", &buffer) == 1) {
+        let number = CoreFoundationNumberInitialize(type, &buffer);
+
+        return number;
+      }
+      break;
+    }
+
+    case kCoreFoundationNumberTypeFloatingPoint: {
+      let buffer = (CFloatingPoint)0;
       if (CIOScanWithFormat("%lf", &buffer) == 1) {
         let number = CoreFoundationNumberInitialize(type, &buffer);
 
@@ -83,10 +183,59 @@ void CoreFoundationIOPrintNumber(
 
   let type = CoreFoundationNumberGetType(number);
   switch (type) {
+    case kCoreFoundationNumberTypeInteger8: {
+      let buffer = (CInteger8)0;
+      CoreFoundationNumberGetValue(number, &buffer);
+      CIOPrintWithFormat("%hhd", buffer);
+      break;
+    }
+
+    case kCoreFoundationNumberTypeInteger16: {
+      let buffer = (CInteger16)0;
+      CoreFoundationNumberGetValue(number, &buffer);
+      CIOPrintWithFormat("%hd", buffer);
+      break;
+    }
+
+    case kCoreFoundationNumberTypeInteger32: {
+      let buffer = (CInteger32)0;
+      CoreFoundationNumberGetValue(number, &buffer);
+      CIOPrintWithFormat("%d", buffer);
+      break;
+    }
+
     case kCoreFoundationNumberTypeInteger64: {
       let buffer = 0ll;
       CoreFoundationNumberGetValue(number, &buffer);
       CIOPrintWithFormat("%lld", buffer);
+      break;
+    }
+
+    case kCoreFoundationNumberTypeInteger: {
+      let buffer = (CInteger)0;
+      CoreFoundationNumberGetValue(number, &buffer);
+      CIOPrintWithFormat("%ld", buffer);
+      break;
+    }
+
+    case kCoreFoundationNumberTypeUnsignedInteger8: {
+      let buffer = (CUnsignedInteger8)0;
+      CoreFoundationNumberGetValue(number, &buffer);
+      CIOPrintWithFormat("%hhu", buffer);
+      break;
+    }
+
+    case kCoreFoundationNumberTypeUnsignedInteger16: {
+      let buffer = (CUnsignedInteger16)0;
+      CoreFoundationNumberGetValue(number, &buffer);
+      CIOPrintWithFormat("%hu", buffer);
+      break;
+    }
+
+    case kCoreFoundationNumberTypeUnsignedInteger32: {
+      let buffer = (CUnsignedInteger32)0;
+      CoreFoundationNumberGetValue(number, &buffer);
+      CIOPrintWithFormat("%u", buffer);
       break;
     }
 
@@ -97,8 +246,29 @@ void CoreFoundationIOPrintNumber(
       break;
     }
 
+    case kCoreFoundationNumberTypeUnsignedInteger: {
+      let buffer = (CUnsignedInteger)0;
+      CoreFoundationNumberGetValue(number, &buffer);
+      CIOPrintWithFormat("%lu", buffer);
+      break;
+    }
+
+    case kCoreFoundationNumberTypeFloatingPoint32: {
+      let buffer = (CFloatingPoint32)0;
+      CoreFoundationNumberGetValue(number, &buffer);
+      CIOPrintWithFormat("%f", buffer);
+      break;
+    }
+
     case kCoreFoundationNumberTypeFloatingPoint64: {
       let buffer = 0.0;
+      CoreFoundationNumberGetValue(number, &buffer);
+      CIOPrintWithFormat("%lf", buffer);
+      break;
+    }
+
+    case kCoreFoundationNumberTypeFloatingPoint: {
+      let buffer = (CFloatingPoint)0;
       CoreFoundationNumberGetValue(number, &buffer);
       CIOPrintWithFormat("%lf", buffer);
       break;

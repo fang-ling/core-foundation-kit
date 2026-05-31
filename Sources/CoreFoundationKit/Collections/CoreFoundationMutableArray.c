@@ -36,7 +36,7 @@ C_ASSUME_NONNULL_BEGIN
 
 void CoreFoundationMutableArraySetObjectAtIndex(
   CoreFoundationMutableArray* array,
-  CUnsignedInteger64 index,
+  CInteger index,
   CoreFoundationAnyObject* object
 ) {
   CoreFoundationRetain(array);

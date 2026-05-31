@@ -40,7 +40,7 @@ typedef struct _CoreFoundationObject {
 
 typedef struct _CoreFoundationClass {
   CoreFoundationString * nillable
- (* nonnil copyDescription)(CoreFoundationAnyObject* object);
+    (* nonnil copyDescription)(CoreFoundationAnyObject* object);
 
   void (*deinitialize)(CoreFoundationAnyObject* object);
 } CoreFoundationClass;
