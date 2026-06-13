@@ -151,7 +151,11 @@ CoreFoundationNumber* nillable CoreFoundationIOScanNumber(
 
     case kCoreFoundationNumberTypeFloatingPoint: {
       let buffer = (CFloatingPoint)0;
+#if C_TARGET_ARCHITECTURE_WASM32
+      if (CIOScanWithFormat("%f", &buffer) == 1) {
+#else
       if (CIOScanWithFormat("%lf", &buffer) == 1) {
+#endif
         let number = CoreFoundationNumberInitialize(type, &buffer);
 
         return number;

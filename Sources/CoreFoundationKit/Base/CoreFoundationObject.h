@@ -51,7 +51,8 @@ typedef enum CoreFoundationTypeID {
   kCoreFoundationTypeIDNotAType = 0,
   kCoreFoundationTypeIDNumber = 1,
   kCoreFoundationTypeIDString = 2,
-  kCoreFoundationTypeIDArray = 3
+  kCoreFoundationTypeIDArray = 3,
+  kCoreFoundationTypeIDValue = 4
 } CoreFoundationTypeID;
 
 void CoreFoundationRetain(CoreFoundationAnyObject* object);
