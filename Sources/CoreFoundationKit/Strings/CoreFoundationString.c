@@ -107,7 +107,7 @@ CoreFoundationStringInitializeWithFormat(CString format, ...) {
     } else if (format[i] == '%' && format[i + 1] == 'f') {
       let value = CVariableArgumentListGetNextArgument(
         arguments,
-        CFloatingPoint
+        CFloatingPoint64
       );
 
       buffer = (CInteger8 [32]){ 0 };
