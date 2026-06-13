@@ -61,7 +61,7 @@ typedef struct CoreFoundationRectangle {
  * - Returns: Returns a size structure with the specified width and height.
  */
 #define CoreFoundationSizeMake(width, height) \
-  ((CoreFoundationSize){ .width = (width), .height = (height) })
+  ((CoreFoundationSize){ (width), (height) })
 
 /**
  * Returns a rectangle with the specified coordinate and size values.
