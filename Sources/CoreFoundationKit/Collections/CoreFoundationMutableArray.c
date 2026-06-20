@@ -78,6 +78,25 @@ void CoreFoundationMutableArrayAppendObject(
   CoreFoundationRelease(array);
 }
 
+void CoreFoundationMutableArrayInsertObjectAtIndex(
+  CoreFoundationArray* array,
+  CoreFoundationAnyObject* object,
+  CInteger index
+) {
+  CoreFoundationRetain(array);
+
+  CoreFoundationMutableArrayAppendObject(array, object);
+
+  CMemoryCopy(
+    array->objects + index + 1,
+    array->objects + index,
+    sizeof(CoreFoundationAnyObject*) * (array->count - index - 1)
+  );
+  array->objects[index] = object;
+
+  CoreFoundationRelease(array);
+}
+
 void CoreFoundationMutableArrayRemoveLastObject(
   CoreFoundationMutableArray* array
 ) {
@@ -94,6 +113,25 @@ void CoreFoundationMutableArrayRemoveLastObject(
       sizeof(CoreFoundationAnyObject*) * array->capacity
     );
   }
+
+  CoreFoundationRelease(array);
+}
+
+void CoreFoundationMutableArrayRemoveObjectAtIndex(
+  CoreFoundationMutableArray* array,
+  CInteger index
+) {
+  CoreFoundationRetain(array);
+
+  let object = array->objects[index];
+  CMemoryCopy(
+    array->objects + index,
+    array->objects + index + 1,
+    sizeof(CoreFoundationAnyObject*) * (array->count - index - 1)
+  );
+  array->objects[array->count - 1] = object;
+
+  CoreFoundationMutableArrayRemoveLastObject(array);
 
   CoreFoundationRelease(array);
 }
