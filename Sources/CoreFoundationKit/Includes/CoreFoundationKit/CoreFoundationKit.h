@@ -24,6 +24,7 @@
 
 #include "../../Collections/CoreFoundationArray.h"
 #include "../../Collections/CoreFoundationMutableArray.h"
+#include "../../Collections/CoreFoundationRedBlackTree.h"
 
 #include "../../Geometry/CoreFoundationGeometry.h"
 
