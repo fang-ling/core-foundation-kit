@@ -28,7 +28,24 @@ C_ASSUME_NONNULL_BEGIN
 
 typedef struct CoreFoundationArray CoreFoundationArray;
 
-CoreFoundationArray* CoreFoundationArrayInitialize();
+/**
+ * Creates a new immutable array with the given values.
+ *
+ * - Parameters:
+ *   - objects: A C array of the pointer-sized values to be in the new array.
+ *     The values in the new array are ordered in the same order in which they
+ *     appear in this C array. This value may be `null` if `count` is 0. This C
+ *     array is not changed or freed by this function. If values is not a valid
+ *     pointer to a C array of at least `count` elements, the behavior is
+ *     undefined.
+ *   - count: The number of values to copy from the values C array into the new
+ *     array. This number will be the count of the new array—it must not be
+ *     negative or greater than the number of elements in values.
+ */
+CoreFoundationArray* CoreFoundationArrayInitialize(
+  const void * nillable * nillable objects,
+  CInteger count
+);
 
 /**
  * Returns the number of values currently in an array.

@@ -24,10 +24,16 @@
 C_ASSUME_NONNULL_BEGIN
 
 #ifndef ONLINE_JUDGE
-  extern CoreFoundationAnyObject* FoundationCoreFoundationArrayInitialize();
+  extern CoreFoundationAnyObject* FoundationCoreFoundationArrayInitialize(
+    const void** objects,
+    CInteger count
+  );
 #endif /* !ONLINE_JUDGE */
 
-CoreFoundationArray* CoreFoundationArrayInitialize() {
+CoreFoundationArray* CoreFoundationArrayInitialize(
+  const void** objects,
+  CInteger count
+) {
 #ifdef ONLINE_JUDGE
   let size = sizeof(CoreFoundationArray);
   let array = (CoreFoundationArray*)CMemoryAllocate(size);
@@ -36,13 +42,19 @@ CoreFoundationArray* CoreFoundationArrayInitialize() {
   array->object.referenceCount = 1;
   array->object.typeID = kCoreFoundationTypeIDArray;
 
-  array->objects = CMemoryAllocate(0);
-  array->count = 0;
-  array->capacity = 0;
+  array->objects = CMemoryAllocate(count * sizeof(const void*));
+  array->count = count;
+  array->capacity = count;
+
+  let i = 0;
+  for (; i < count; i += 1) {
+    CoreFoundationRetain(objects[i]);
+    array->objects[i] = objects[i];
+  }
 
   return array;
 #else
-  return FoundationCoreFoundationArrayInitialize();
+  return FoundationCoreFoundationArrayInitialize(objects, count);
 #endif
 }
 
