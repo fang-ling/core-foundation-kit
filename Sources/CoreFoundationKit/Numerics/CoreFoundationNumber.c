@@ -318,6 +318,37 @@ CoreFoundationNumberType CoreFoundationNumberGetType(
   return type;
 }
 
+CoreFoundationComparisonResult CoreFoundationNumberCompare(
+  CoreFoundationNumber* number,
+  CoreFoundationNumber* otherNumber
+) {
+  CoreFoundationRetain(number);
+  CoreFoundationRetain(otherNumber);
+
+  if (
+    number->type == kCoreFoundationNumberTypeFloatingPoint ||
+    number->type == kCoreFoundationNumberTypeFloatingPoint32 ||
+    number->type == kCoreFoundationNumberTypeFloatingPoint64 ||
+    otherNumber->type == kCoreFoundationNumberTypeFloatingPoint ||
+    otherNumber->type == kCoreFoundationNumberTypeFloatingPoint32 ||
+    otherNumber->type == kCoreFoundationNumberTypeFloatingPoint64
+  ) {
+    CDebuggingHaltWithMessage("TODO");
+  }
+
+  let comparisonResult = kCoreFoundationComparisonResultSameOrder;
+  if (number->value.integer64 < otherNumber->value.integer64) {
+    comparisonResult = kCoreFoundationComparisonResultAscendingOrder;
+  } else if (number->value.integer64 > otherNumber->value.integer64) {
+    comparisonResult = kCoreFoundationComparisonResultDescendingOrder;
+  }
+
+  CoreFoundationRelease(number);
+  CoreFoundationRelease(otherNumber);
+
+  return comparisonResult;
+}
+
 C_INITIALIZER
 void CoreFoundationNumberRegisterClass() {
   CoreFoundationClassTable[kCoreFoundationTypeIDNumber].deinitialize = null;
