@@ -28,7 +28,8 @@ C_ASSUME_NONNULL_BEGIN
 extern CoreFoundationAnyObject* FoundationCoreFoundationDictionaryInitialize(
   const void * nillable * nonnil keys,
   const void * nillable * nonnil values,
-  CInteger count
+  CInteger count,
+  CBoolean isMutable
 );
 #endif /* !C_TARGET_OS_ONLINE_JUDGE */
 
@@ -39,7 +40,7 @@ CoreFoundationDictionary* CoreFoundationDictionaryInitialize(
 ) {
 #if C_TARGET_OS_ONLINE_JUDGE
 #else
-  return FoundationCoreFoundationDictionaryInitialize(keys, values, count);
+  return FoundationCoreFoundationDictionaryInitialize(keys, values, count, no);
 #endif
 }
 

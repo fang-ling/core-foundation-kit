@@ -31,6 +31,8 @@ struct CoreFoundationDictionary {
   CoreFoundationObject object;
 
   _CoreFoundationRedBlackTree* tree;
+  CInteger mutationCount;
+  CBoolean isMutable;
 };
 
 C_ASSUME_NONNULL_END
