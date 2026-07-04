@@ -593,4 +593,31 @@ void _CoreFoundationRedBlackTreeGetKey(
   }
 }
 
+void _CoreFoundationRedBlackTreeGetKeyAtIndex(
+  _CoreFoundationRedBlackTree* tree,
+  CInteger index,
+  void* result
+) {
+  index += 1;
+
+  let x = tree->root;
+  while (x != tree->sentinel) {
+    if (
+      x->children[0]->size + 1 <= index &&
+      x->children[0]->size + x->count >= index
+    ) {
+      CMemoryCopy(result, x->key, tree->keySize);
+
+      return;
+    } else {
+      if (x->children[0]->size + x->count < index) {
+        index -= x->children[0]->size + x->count;
+        x = x->children[1];
+      } else {
+        x = x->children[0];
+      }
+    }
+  }
+}
+
 C_ASSUME_NONNULL_END
