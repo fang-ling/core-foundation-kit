@@ -136,6 +136,12 @@ CoreFoundationAnyObject* CoreFoundationDictionaryGetValue(
   CoreFoundationAnyObject* key
 );
 
+void _CoreFoundationDictionaryGetEntryAtIndex(
+  CoreFoundationDictionary* dictionary,
+  CInteger index,
+  _CoreFoundationDictionaryEntry* result
+);
+
 C_ASSUME_NONNULL_END
 
 #endif /* CoreFoundationDictionary_h */

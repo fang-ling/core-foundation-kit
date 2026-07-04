@@ -92,4 +92,16 @@ CoreFoundationAnyObject* CoreFoundationDictionaryGetValue(
   return storedEntry.value;
 }
 
+void _CoreFoundationDictionaryGetEntryAtIndex(
+  CoreFoundationDictionary* dictionary,
+  CInteger index,
+  _CoreFoundationDictionaryEntry* result
+) {
+  CoreFoundationRetain(dictionary);
+
+  _CoreFoundationRedBlackTreeGetKeyAtIndex(dictionary->tree, index, result);
+
+  CoreFoundationRelease(dictionary);
+}
+
 C_ASSUME_NONNULL_END
