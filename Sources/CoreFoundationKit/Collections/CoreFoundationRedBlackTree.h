@@ -86,6 +86,12 @@ void _CoreFoundationRedBlackTreeGetKey(
   void* result
 );
 
+void _CoreFoundationRedBlackTreeGetKeyAtIndex(
+  _CoreFoundationRedBlackTree* tree,
+  CInteger index,
+  void* result
+);
+
 C_ASSUME_NONNULL_END
 
 #endif /* CoreFoundationRedBlackTree_h */

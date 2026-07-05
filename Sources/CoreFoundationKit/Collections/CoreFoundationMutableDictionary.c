@@ -25,14 +25,18 @@
 C_ASSUME_NONNULL_BEGIN
 
 #if !C_TARGET_OS_ONLINE_JUDGE
-extern CoreFoundationAnyObject*
-FoundationCoreFoundationMutableDictionaryInitialize();
+extern CoreFoundationAnyObject* FoundationCoreFoundationDictionaryInitialize(
+  const void * nillable * nillable keys,
+  const void * nillable * nillable values,
+  CInteger count,
+  CBoolean isMutable
+);
 #endif /* !C_TARGET_OS_ONLINE_JUDGE */
 
 CoreFoundationMutableDictionary* CoreFoundationMutableDictionaryInitialize() {
 #if C_TARGET_OS_ONLINE_JUDGE
 #else
-  return FoundationCoreFoundationMutableDictionaryInitialize();
+  return FoundationCoreFoundationDictionaryInitialize(null, null, 0, yes);
 #endif
 }
 
@@ -42,8 +46,14 @@ void CoreFoundationMutableDictionarySetValue(
   CoreFoundationAnyObject* value
 ) {
   CoreFoundationRetain(dictionary);
+  if (!dictionary->isMutable) {
+    CDebuggingHaltWithMessage("*** IMMUTABLE COLLECTION IS BEING MUTATED. ***");
+  }
+
   CoreFoundationRetain(key);
   CoreFoundationRetain(value);
+
+  dictionary->mutationCount += 1;
 
   let entry = (_CoreFoundationDictionaryEntry){ key, value };
 

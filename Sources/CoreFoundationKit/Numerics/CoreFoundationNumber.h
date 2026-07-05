@@ -20,6 +20,8 @@
 #ifndef CoreFoundationNumber_h
 #define CoreFoundationNumber_h
 
+#include "../Sorting/CoreFoundationComparisonResult.h"
+
 #include <CKit/CKit.h>
 
 C_ASSUME_NONNULL_BEGIN
@@ -107,6 +109,13 @@ typedef enum CoreFoundationNumberType {
   kCoreFoundationNumberTypeFloatingPoint,
 } CoreFoundationNumberType;
 
+/**
+ * ## Topics
+ *
+ * ### Comparing Numbers
+ *
+ * - ``CoreFoundationNumberCompare``
+ */
 typedef struct CoreFoundationNumber CoreFoundationNumber;
 
 /**
@@ -152,6 +161,37 @@ void CoreFoundationNumberGetValue(
  */
 CoreFoundationNumberType CoreFoundationNumberGetType(
   CoreFoundationNumber* number
+);
+
+/**
+ * Compares two CFNumber objects and returns a comparison result.
+ *
+ * When comparing two ``CoreFoundationNumber`` objects using this function, one
+ * or both objects can represent a special-case number such as signed 0, signed
+ * infinity, or NaN.
+ *
+ * The following rules apply:
+ *
+ *   - Negative 0 compares less than positive 0.
+ *   - Positive infinity compares greater than everything except itself, to
+ *     which it compares equal.
+ *   - Negative infinity compares less than everything except itself, to which
+ *     it compares equal.
+ *   - If both numbers are NaN, then they compare equal.
+ *   - If only one of the numbers is NaN, then the NaN compares greater than the
+ *     other number if it is negative, and smaller than the other number if it
+ *     is positive.
+ *
+ * - Parameters:
+ *   - number1: The first ``CoreFoundationNumber`` object to compare.
+ *   - number2: The second ``CoreFoundationNumber`` object to compare.
+ *
+ * - Returns: A ``CoreFoundationComparisonResult`` constant that indicates
+ *   whether `number` is equal to, less than, or greater than `otherNumber`.
+ */
+CoreFoundationComparisonResult CoreFoundationNumberCompare(
+  CoreFoundationNumber* number,
+  CoreFoundationNumber* otherNumber
 );
 
 C_ASSUME_NONNULL_END
