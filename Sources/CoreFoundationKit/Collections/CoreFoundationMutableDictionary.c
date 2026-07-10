@@ -72,4 +72,31 @@ void CoreFoundationMutableDictionarySetValue(
   CoreFoundationRelease(dictionary);
 }
 
+void CoreFoundationMutableDictionaryRemoveValue(
+  CoreFoundationMutableDictionary* dictionary,
+  CoreFoundationAnyObject* key
+) {
+  CoreFoundationRetain(dictionary);
+  if (!dictionary->isMutable) {
+    CDebuggingHaltWithMessage("*** IMMUTABLE COLLECTION IS BEING MUTATED. ***");
+  }
+
+  CoreFoundationRetain(key);
+
+  dictionary->mutationCount += 1;
+
+  let entry = (_CoreFoundationDictionaryEntry){ key, null };
+
+  if (_CoreFoundationRedBlackTreeContainsKey(dictionary->tree, &entry)) {
+    _CoreFoundationRedBlackTreeGetKey(dictionary->tree, &entry, &entry);
+    _CoreFoundationRedBlackTreeRemoveKey(dictionary->tree, &entry);
+
+    CoreFoundationRelease(entry.key);
+    CoreFoundationRelease(entry.value);
+  }
+
+  CoreFoundationRelease(key);
+  CoreFoundationRelease(dictionary);
+}
+
 C_ASSUME_NONNULL_END
