@@ -28,11 +28,13 @@ C_ASSUME_NONNULL_BEGIN
 
 typedef CoreFoundationArray CoreFoundationMutableArray;
 
-#ifdef ONLINE_JUDGE
-#  define CoreFoundationMutableArrayInitialize CoreFoundationArrayInitialize
-#else
-  CoreFoundationMutableArray* CoreFoundationMutableArrayInitialize();
-#endif
+/**
+ * Creates a new empty mutable array.
+ *
+ * - Returns: A new mutable array, or `nil` if there was a problem creating the
+ *   object.
+ */
+CoreFoundationMutableArray* CoreFoundationMutableArrayInitialize();
 
 #define CoreFoundationMutableArrayGetCount CoreFoundationArrayGetCount
 

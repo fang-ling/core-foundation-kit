@@ -23,12 +23,13 @@
 
 C_ASSUME_NONNULL_BEGIN
 
-#ifndef ONLINE_JUDGE
-  extern CoreFoundationAnyObject* FoundationCoreFoundationArrayInitialize(
-    const void** objects,
-    CInteger count
-  );
-#endif /* !ONLINE_JUDGE */
+#if !C_TARGET_OS_ONLINE_JUDGE
+extern CoreFoundationAnyObject* FoundationCoreFoundationArrayInitialize(
+  const void** objects,
+  CInteger count,
+  CBoolean isMutable
+);
+#endif
 
 CoreFoundationArray* CoreFoundationArrayInitialize(
   const void** objects,
@@ -45,6 +46,8 @@ CoreFoundationArray* CoreFoundationArrayInitialize(
   array->objects = CMemoryAllocate(count * sizeof(const void*));
   array->count = count;
   array->capacity = count;
+  array->mutationCount = 0;
+  array->isMutable = no;
 
   let i = 0;
   for (; i < count; i += 1) {
@@ -54,7 +57,7 @@ CoreFoundationArray* CoreFoundationArrayInitialize(
 
   return array;
 #else
-  return FoundationCoreFoundationArrayInitialize(objects, count);
+  return FoundationCoreFoundationArrayInitialize(objects, count, no);
 #endif
 }
 
@@ -81,7 +84,13 @@ CoreFoundationAnyObject* CoreFoundationArrayGetObjectAtIndex(
   CoreFoundationArray* array,
   CInteger index
 ) {
-  return array->objects[index];
+  CoreFoundationRetain(array);
+
+  let object = array->objects[index];
+
+  CoreFoundationRelease(array);
+
+  return object;
 }
 
 C_INITIALIZER
