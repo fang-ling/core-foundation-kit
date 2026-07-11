@@ -193,7 +193,7 @@ CoreFoundationStringCopyDescription(CoreFoundationAnyObject* string) {
   let copy = CoreFoundationStringInitializeWithCString("");
   CMemoryDeallocate(copy->characters);
   copy->count = ((CoreFoundationString*)string)->count;
-  copy->characters = CMemoryAllocate(copy->count * sizeof(CInteger32));
+  copy->characters = CMemoryAllocate(copy->count, sizeof(CInteger32));
   CMemoryCopy(
     copy->characters,
     ((CoreFoundationString*)string)->characters,
@@ -283,10 +283,12 @@ CoreFoundationComparisonResult CoreFoundationStringCompare(
   CoreFoundationRetain(string2);
 
   let characters1 = (CInteger32*)CMemoryAllocate(
-    (string1->count + 1) * sizeof(CInteger32)
+    string1->count + 1,
+    sizeof(CInteger32)
   );
   let characters2 = (CInteger32*)CMemoryAllocate(
-    (string2->count + 1) * sizeof(CInteger32)
+    string2->count + 1,
+    sizeof(CInteger32)
   );
 
   CMemoryCopy(
