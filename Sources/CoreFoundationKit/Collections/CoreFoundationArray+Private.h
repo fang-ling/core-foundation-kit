@@ -33,6 +33,8 @@ struct CoreFoundationArray {
   CoreFoundationAnyObject* nonnil * nonnil objects;
   CInteger count;
   CInteger capacity;
+  CInteger mutationCount;
+  CBoolean isMutable;
 };
 
 C_ASSUME_NONNULL_END

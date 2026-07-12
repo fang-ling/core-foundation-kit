@@ -32,6 +32,7 @@ _CoreFoundationRedBlackTreeNode* _CoreFoundationRedBlackTreeNodeInitialize(
   _CoreFoundationRedBlackTreeNodeColor color
 ) {
   let node = (_CoreFoundationRedBlackTreeNode*)CMemoryAllocate(
+    1,
     sizeof(_CoreFoundationRedBlackTreeNode)
   );
 
@@ -42,7 +43,7 @@ _CoreFoundationRedBlackTreeNode* _CoreFoundationRedBlackTreeNodeInitialize(
   node->count = count;
   node->size = size;
 
-  node->key = CMemoryAllocate(keySize);
+  node->key = CMemoryAllocate(1, keySize);
   if (key) {
     CMemoryCopy(node->key, key, keySize);
   }
@@ -385,6 +386,7 @@ _CoreFoundationRedBlackTree* _CoreFoundationRedBlackTreeInitialize(
   CoreFoundationComparisonResult (*compare)(const void* lhs, const void* rhs)
 ) {
   let tree = (_CoreFoundationRedBlackTree*)CMemoryAllocate(
+    1,
     sizeof(_CoreFoundationRedBlackTree)
   );
 

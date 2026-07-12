@@ -293,9 +293,7 @@ void CoreFoundationIOPrintString(
   let count = CoreFoundationStringGetCount(string);
 
   let bufferCount = CoreFoundationStringGetCStringCount(string);
-  let buffer = (CInteger8*)CMemoryAllocate(
-    (bufferCount + 1) * sizeof(CInteger8)
-  );
+  let buffer = (CInteger8*)CMemoryAllocate(bufferCount + 1, sizeof(CInteger8));
   CoreFoundationStringCopyCString(string, buffer);
 
   CIOPrintWithFormat("%s%s", buffer, terminator);

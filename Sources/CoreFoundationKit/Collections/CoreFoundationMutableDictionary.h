@@ -51,8 +51,8 @@ C_ASSUME_NONNULL_BEGIN
  *
  * ### Modifying a Dictionary
  *
- * - ``CoreFoundationMutableDictionaryAddValue``
  * - ``CoreFoundationMutableDictionarySetValue``
+ * - ``CoreFoundationMutableDictionaryRemoveValue``
  */
 typedef CoreFoundationDictionary CoreFoundationMutableDictionary;
 
@@ -82,6 +82,20 @@ void CoreFoundationMutableDictionarySetValue(
   CoreFoundationMutableDictionary* dictionary,
   CoreFoundationAnyObject* key,
   CoreFoundationAnyObject* value
+);
+
+/**
+ * Removes a key-value pair.
+ *
+ * - Parameters:
+ *   - dictionary: The dictionary to modify.
+ *   - key: The key of the value to remove from theDict. If a key which matches
+ *     key is present in the dictionary, the key-value pair is removed from the
+ *     dictionary, otherwise this function does nothing ("remove if present").
+ */
+void CoreFoundationMutableDictionaryRemoveValue(
+  CoreFoundationMutableDictionary* dictionary,
+  CoreFoundationAnyObject* key
 );
 
 #define \

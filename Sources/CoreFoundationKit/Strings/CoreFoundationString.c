@@ -193,7 +193,7 @@ CoreFoundationStringCopyDescription(CoreFoundationAnyObject* string) {
   let copy = CoreFoundationStringInitializeWithCString("");
   CMemoryDeallocate(copy->characters);
   copy->count = ((CoreFoundationString*)string)->count;
-  copy->characters = CMemoryAllocate(copy->count * sizeof(CInteger32));
+  copy->characters = CMemoryAllocate(copy->count, sizeof(CInteger32));
   CMemoryCopy(
     copy->characters,
     ((CoreFoundationString*)string)->characters,
@@ -282,39 +282,44 @@ CoreFoundationComparisonResult CoreFoundationStringCompare(
   CoreFoundationRetain(string1);
   CoreFoundationRetain(string2);
 
-  let characters1 = string1->characters;
-  let characters2 = string2->characters;
-  let count1 = string1->count;
-  let count2 = string2->count;
+  let characters1 = (CInteger32*)CMemoryAllocate(
+    string1->count + 1,
+    sizeof(CInteger32)
+  );
+  let characters2 = (CInteger32*)CMemoryAllocate(
+    string2->count + 1,
+    sizeof(CInteger32)
+  );
 
-  let minimumCount = CNumberFindMinimum(count1, count2);
-  let result = kCoreFoundationComparisonResultSameOrder;
+  CMemoryCopy(
+    characters1,
+    string1->characters,
+    string1->count * sizeof(CInteger32)
+  );
+  CMemoryCopy(
+    characters2,
+    string2->characters,
+    string2->count * sizeof(CInteger32)
+  );
+  characters1[string1->count] = '\0';
+  characters2[string2->count] = '\0';
 
-  let i = 0;
-  for (; i < minimumCount; i += 1) {
-    if (characters1[i] != characters2[i]) {
-      result = (characters1[i] < characters2[i])
-        ? kCoreFoundationComparisonResultAscendingOrder
-        : kCoreFoundationComparisonResultDescendingOrder;
+  let result = CStringCompareUTF32Characters(characters1, characters2);
 
-      goto cleanup;
-    }
+  let comparisonResult = kCoreFoundationComparisonResultSameOrder;
+  if (result < 0) {
+    comparisonResult = kCoreFoundationComparisonResultAscendingOrder;
+  } else if (result > 0) {
+    comparisonResult = kCoreFoundationComparisonResultDescendingOrder;
   }
 
-  if (count1 < count2) {
-    result = kCoreFoundationComparisonResultAscendingOrder;
-  } else if (count1 > count2) {
-    result = kCoreFoundationComparisonResultDescendingOrder;
-  } else {
-    result = kCoreFoundationComparisonResultSameOrder;
-  }
+  CMemoryDeallocate(characters1);
+  CMemoryDeallocate(characters2);
 
-  cleanup: {
-    CoreFoundationRelease(string1);
-    CoreFoundationRelease(string2);
+  CoreFoundationRelease(string1);
+  CoreFoundationRelease(string2);
 
-    return result;
-  }
+  return comparisonResult;
 }
 
 C_INITIALIZER

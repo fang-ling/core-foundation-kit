@@ -23,16 +23,25 @@
 
 C_ASSUME_NONNULL_BEGIN
 
-#ifndef ONLINE_JUDGE
-  extern CoreFoundationAnyObject*
-  FoundationCoreFoundationMutableArrayInitialize();
-#endif /* !ONLINE_JUDGE */
-
-#ifndef ONLINE_JUDGE
-  CoreFoundationMutableArray* CoreFoundationMutableArrayInitialize() {
-    return FoundationCoreFoundationMutableArrayInitialize();
-  }
+#if !C_TARGET_OS_ONLINE_JUDGE
+extern CoreFoundationAnyObject* FoundationCoreFoundationArrayInitialize(
+  const void** objects,
+  CInteger count,
+  CBoolean isMutable
+);
 #endif
+
+CoreFoundationMutableArray* CoreFoundationMutableArrayInitialize() {
+#if C_TARGET_OS_ONLINE_JUDGE
+  let array = CoreFoundationArrayInitialize(null, 0);
+
+  array->isMutable = yes;
+
+  return array;
+#else
+  return FoundationCoreFoundationArrayInitialize(null, 0, yes);
+#endif
+}
 
 void CoreFoundationMutableArraySetObjectAtIndex(
   CoreFoundationMutableArray* array,
@@ -40,10 +49,15 @@ void CoreFoundationMutableArraySetObjectAtIndex(
   CoreFoundationAnyObject* object
 ) {
   CoreFoundationRetain(array);
+
+  if (!array->isMutable) {
+    CDebuggingHaltWithMessage("*** IMMUTABLE COLLECTION IS BEING MUTATED. ***");
+  }
+  array->mutationCount += 1;
+
   CoreFoundationRetain(object);
 
   CoreFoundationRelease(array->objects[index]);
-
   array->objects[index] = object;
 
   CoreFoundationRelease(array);
@@ -54,6 +68,12 @@ void CoreFoundationMutableArrayAppendObject(
   CoreFoundationAnyObject* object
 ) {
   CoreFoundationRetain(array);
+
+  if (!array->isMutable) {
+    CDebuggingHaltWithMessage("*** IMMUTABLE COLLECTION IS BEING MUTATED. ***");
+  }
+  array->mutationCount += 1;
+
   CoreFoundationRetain(object);
 
   if (array->capacity == 0) {
@@ -101,6 +121,11 @@ void CoreFoundationMutableArrayRemoveLastObject(
   CoreFoundationMutableArray* array
 ) {
   CoreFoundationRetain(array);
+
+  if (!array->isMutable) {
+    CDebuggingHaltWithMessage("*** IMMUTABLE COLLECTION IS BEING MUTATED. ***");
+  }
+  array->mutationCount += 1;
 
   /* Release the last element. */
   CoreFoundationRelease(array->objects[array->count - 1]);
