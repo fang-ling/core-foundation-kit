@@ -23,6 +23,7 @@
 #include "../../Collections/CoreFoundationDictionary.h"
 #include "../../Collections/CoreFoundationMutableArray.h"
 #include "../../Collections/CoreFoundationMutableDictionary.h"
+#include "../../Collections/CoreFoundationMutableSet.h"
 #include "../../Collections/CoreFoundationRedBlackTree.h"
 #include "../../Collections/CoreFoundationSet.h"
 
