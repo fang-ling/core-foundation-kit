@@ -40,6 +40,34 @@ typedef struct CoreFoundationRectangle {
 } CoreFoundationRectangle;
 
 /**
+ * A point constant with location `(0, 0)`.
+ *
+ * The zero point is equivalent to `CoreFoundationPointMake(0, 0)`.
+ */
+extern const CoreFoundationPoint CoreFoundationPointZero;
+
+/**
+ * A size constant with width and height of `0`.
+ *
+ * The zero size is equivalent to `CoreFoundationSizeMake(0, 0)`.
+ */
+extern const CoreFoundationSize CoreFoundationSizeZero;
+
+/**
+ * A rectangle constant with location `(0, 0)`, and width and height of `0`.
+ */
+extern const CoreFoundationRectangle CoreFoundationRectangleZero;
+
+/**
+ * The null rectangle, representing an invalid value.
+ *
+ * This is the rectangle returned when, for example, you intersect two disjoint rectangles.
+ * Note that the null rectangle is not the same as the ``CoreFoundationRectangleZero`` rectangle.
+ * For example, the union of a rectangle with the null rectangle is the original rectangle (that is, the null rectangle contributes nothing).
+ */
+extern const CoreFoundationRectangle CoreFoundationRectangleNull;
+
+/**
  * Returns a point with the specified coordinates.
  *
  * - Parameters:

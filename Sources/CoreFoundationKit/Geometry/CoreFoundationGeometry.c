@@ -21,6 +21,14 @@
 
 C_ASSUME_NONNULL_BEGIN
 
+const CoreFoundationPoint CoreFoundationPointZero = (CoreFoundationPoint){ 0 };
+
+const CoreFoundationSize CoreFoundationSizeZero = (CoreFoundationSize){ 0 };
+
+const CoreFoundationRectangle CoreFoundationRectangleZero = (CoreFoundationRectangle){ 0 };
+
+const CoreFoundationRectangle CoreFoundationRectangleNull = (CoreFoundationRectangle){ { CFloatingPointNaN, CFloatingPointNaN }, { CFloatingPointNaN, CFloatingPointNaN } };
+
 CBoolean CoreFoundationPointEqual(
   CoreFoundationPoint lhs,
   CoreFoundationPoint rhs
