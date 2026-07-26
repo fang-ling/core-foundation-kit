@@ -77,7 +77,7 @@ extern const CoreFoundationRectangle CoreFoundationRectangleNull;
  * - Returns: A point.
  */
 #define CoreFoundationPointMake(x, y) \
-  ((CoreFoundationPoint){ .x = (x), .y = (y) })
+  ((CoreFoundationPoint){ (x), (y) })
 
 /**
  * Returns a size with the specified dimension values.
@@ -117,10 +117,55 @@ CBoolean CoreFoundationSizeEqual(
   CoreFoundationSize rhs
 );
 
-CBoolean CoreFoundationRectangleEqual(
-  CoreFoundationRectangle lhs,
-  CoreFoundationRectangle rhs
-);
+/**
+ * Returns whether two rectangles are equal in size and position.
+ *
+ * - Parameters:
+ *   - r1: The first rectangle to examine.
+ *   - r2: The second rectangle to examine.
+ *
+ * - Returns: `yes` if the two specified rectangles have equal size and origin values, or if both rectangles are null rectangles.
+ *   Otherwise, `no`.
+ */
+CBoolean CoreFoundationRectangleIsEqual(CoreFoundationRectangle r1, CoreFoundationRectangle r2);
+
+/**
+ * Returns whether a rectangle has zero width or height, or is a null rectangle.
+ *
+ * An empty rectangle is either a null rectangle or a valid rectangle with zero height or width.
+ *
+ * - Parameter rectangle: The rectangle to examine.
+ *
+ * - Returns: `yes` if the specified rectangle is empty; otherwise, `no`.
+ */
+CBoolean CoreFoundationRectangleIsEmpty(CoreFoundationRectangle rectangle);
+
+/**
+ * Returns the smallest rectangle that contains the two source rectangles.
+ *
+ * Both rectangles are standardized prior to calculating the union.
+ * If either of the rectangles is a null rectangle, a copy of the other rectangle is returned (resulting in a null rectangle if both rectangles are null).
+ * Otherwise a rectangle that completely contains the source rectangles is returned.
+ *
+ * - Parameters:
+ *   - r1: The first source rectangle.
+ *   - r2: The second source rectangle.
+ *
+ * - Returns: The smallest rectangle that completely contains both of the source rectangles.
+ */
+CoreFoundationRectangle CoreFoundationRectangleUnion(CoreFoundationRectangle r1, CoreFoundationRectangle r2);
+
+/**
+ * Returns whether two rectangles intersect.
+ *
+ * - Parameters:
+ *   - r1: The first rectangle to examine.
+ *   - r2: The second rectangle to examine.
+ *
+ * - Returns: `yes` if the two specified rectangles intersect; otherwise, `no`.
+ *   The first rectangle intersects the second if the intersection of the rectangles is not equal to the null rectangle.
+ */
+CBoolean CoreFoundationRectangleIsIntersection(CoreFoundationRectangle r1, CoreFoundationRectangle r2);
 
 C_ASSUME_NONNULL_END
 

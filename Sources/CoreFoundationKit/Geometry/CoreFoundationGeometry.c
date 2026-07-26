@@ -43,7 +43,7 @@ CBoolean CoreFoundationSizeEqual(
   return lhs.width == rhs.width && lhs.height == rhs.height;
 }
 
-CBoolean CoreFoundationRectangleEqual(
+CBoolean CoreFoundationRectangleIsEqual(
   CoreFoundationRectangle lhs,
   CoreFoundationRectangle rhs
 ) {
@@ -51,6 +51,95 @@ CBoolean CoreFoundationRectangleEqual(
     CoreFoundationPointEqual(lhs.origin, rhs.origin) &&
     CoreFoundationSizeEqual(lhs.size, rhs.size)
   );
+}
+
+CBoolean CoreFoundationRectangleIsNull(CoreFoundationRectangle rectangle) {
+  return CNumberIsNaN(rectangle.origin.x) || CNumberIsNaN(rectangle.origin.y) || CNumberIsNaN(rectangle.size.width) || CNumberIsNaN(rectangle.size.height);
+}
+
+CBoolean CoreFoundationRectangleIsEmpty(CoreFoundationRectangle rectangle) {
+  if (CoreFoundationRectangleIsNull(rectangle)) {
+    return yes;
+  }
+
+  return rectangle.size.width == 0 || rectangle.size.height == 0;
+}
+
+CoreFoundationRectangle CoreFoundationRectangleStandardize(CoreFoundationRectangle rectangle) {
+  if (rectangle.size.width < 0) {
+    rectangle.origin.x += rectangle.size.width;
+    rectangle.size.width = -rectangle.size.width;
+  }
+  if (rectangle.size.height < 0) {
+    rectangle.origin.y += rectangle.size.height;
+    rectangle.size.height = -rectangle.size.height;
+  }
+
+  return rectangle;
+}
+
+CoreFoundationRectangle CoreFoundationRectangleUnion(CoreFoundationRectangle r1, CoreFoundationRectangle r2) {
+  let rectangle = CoreFoundationRectangleZero;
+
+  /* If both of them are empty we can return r2 as an empty rect, so this covers all cases. */
+  if (CoreFoundationRectangleIsEmpty(r1)) {
+    return r2;
+  } else if (CoreFoundationRectangleIsEmpty(r2)) {
+    return r1;
+  }
+
+  r1 = CoreFoundationRectangleStandardize(r1);
+  r2 = CoreFoundationRectangleStandardize(r2);
+  rectangle.origin.x = CNumberFindMinimum(r1.origin.x, r2.origin.x);
+  rectangle.origin.y = CNumberFindMinimum(r1.origin.y, r2.origin.y);
+  rectangle.size.width = CNumberFindMaximum(r1.origin.x + r1.size.width, r2.origin.x + r2.size.width);
+  rectangle.size.height = CNumberFindMaximum(r1.origin.y + r1.size.height, r2.origin.y + r2.size.height);
+
+  return rectangle;
+}
+
+CoreFoundationRectangle CoreFoundationRectangleIntersect(CoreFoundationRectangle r1, CoreFoundationRectangle r2) {
+  let rectangle = CoreFoundationRectangleZero;
+
+  /* If both of them are empty we can return r2 as an empty rect, so this covers all cases. */
+  if (CoreFoundationRectangleIsEmpty(r1)) {
+    return r2;
+  } else if (CoreFoundationRectangleIsEmpty(r2)) {
+    return r1;
+  }
+
+  r1 = CoreFoundationRectangleStandardize(r1);
+  r2 = CoreFoundationRectangleStandardize(r2);
+
+  if (
+    r1.origin.x + r1.size.width <= r2.origin.x ||
+    r2.origin.x + r2.size.width <= r1.origin.x ||
+    r1.origin.y + r1.size.height <= r2.origin.y ||
+    r2.origin.y + r2.size.height <= r1.origin.y
+  ) {
+    return CoreFoundationRectangleNull;
+  }
+
+  rectangle.origin.x = (r1.origin.x > r2.origin.x ? r1.origin.x : r2.origin.x);
+  rectangle.origin.y = (r1.origin.y > r2.origin.y ? r1.origin.y : r2.origin.y);
+
+  if (r1.origin.x + r1.size.width < r2.origin.x + r2.size.width) {
+    rectangle.size.width = r1.origin.x + r1.size.width - rectangle.origin.x;
+  } else {
+    rectangle.size.width = r2.origin.x + r2.size.width - rectangle.origin.x;
+  }
+
+  if (r1.origin.y + r1.size.height < r2.origin.y + r2.size.height) {
+    rectangle.size.height = r1.origin.y + r1.size.height - rectangle.origin.y;
+  } else {
+    rectangle.size.height = r2.origin.y + r2.size.height - rectangle.origin.y;
+  }
+
+  return rectangle;
+}
+
+CBoolean CoreFoundationRectangleIsIntersection(CoreFoundationRectangle r1, CoreFoundationRectangle r2) {
+  return !CoreFoundationRectangleIsNull(CoreFoundationRectangleIntersect(r1, r2));
 }
 
 C_ASSUME_NONNULL_END
