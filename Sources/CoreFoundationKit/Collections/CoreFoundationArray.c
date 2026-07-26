@@ -93,6 +93,24 @@ CoreFoundationAnyObject* CoreFoundationArrayGetObjectAtIndex(
   return object;
 }
 
+CInteger CoreFoundationArrayFindFirstIndexOfObjectIdenticalToObject(CoreFoundationArray* array, CoreFoundationAnyObject* object) {
+  CoreFoundationRetain(array);
+
+  let index = -1l;
+  let i = 0l;
+  for (; i < array->count; i += 1) {
+    if (array->objects[i] == object) {
+      index = i;
+
+      break;
+    }
+  }
+
+  CoreFoundationRelease(array);
+
+  return index;
+}
+
 C_INITIALIZER
 void CoreFoundationArrayRegisterClass() {
   CoreFoundationClassTable[kCoreFoundationTypeIDArray].deinitialize =

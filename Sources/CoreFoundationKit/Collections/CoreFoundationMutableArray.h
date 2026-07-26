@@ -41,6 +41,8 @@ CoreFoundationMutableArray* CoreFoundationMutableArrayInitialize();
 #define CoreFoundationMutableArrayGetObjectAtIndex \
   CoreFoundationArrayGetObjectAtIndex
 
+#define CoreFoundationMutableArrayFindFirstIndexOfObjectIdenticalToObject CoreFoundationArrayFindFirstIndexOfObjectIdenticalToObject
+
 /**
  * Changes the object at a given index in an array.
  *

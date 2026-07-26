@@ -26,6 +26,13 @@
 
 C_ASSUME_NONNULL_BEGIN
 
+/**
+ * ## Topics
+ *
+ * ### Finding Objects in an Array
+ *
+ * - ``CoreFoundationArrayFindFirstIndexOfObjectIdenticalToObject``
+ */
 typedef struct CoreFoundationArray CoreFoundationArray;
 
 /**
@@ -71,6 +78,19 @@ CoreFoundationAnyObject* CoreFoundationArrayGetObjectAtIndex(
   CoreFoundationArray* array,
   CInteger index
 );
+
+/**
+ * Searches an array forward for a value.
+ *
+ * Objects are considered identical if their object addresses are the same.
+ *
+ * - Parameters:
+ *   - array: The array to examine.
+ *   - object: The object for which to find a match in the `array`.
+ *
+ * - Returns: The lowest index of the matching objects in the `array`, or `-1` if no object matched.
+ */
+CInteger CoreFoundationArrayFindFirstIndexOfObjectIdenticalToObject(CoreFoundationArray* array, CoreFoundationAnyObject* object);
 
 C_ASSUME_NONNULL_END
 
