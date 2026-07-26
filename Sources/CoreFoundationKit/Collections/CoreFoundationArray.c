@@ -4,17 +4,14 @@
  *
  *  Created by Fang Ling on 2026/5/2.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ *  See the License for the specific language governing permissions and limitations under the License.
  */
 
 #include "CoreFoundationArray.h"
@@ -24,17 +21,10 @@
 C_ASSUME_NONNULL_BEGIN
 
 #if !C_TARGET_OS_ONLINE_JUDGE
-extern CoreFoundationAnyObject* FoundationCoreFoundationArrayInitialize(
-  const void** objects,
-  CInteger count,
-  CBoolean isMutable
-);
+extern CoreFoundationAnyObject* FoundationCoreFoundationArrayInitialize(const void** objects, CInteger count, CBoolean isMutable);
 #endif
 
-CoreFoundationArray* CoreFoundationArrayInitialize(
-  const void** objects,
-  CInteger count
-) {
+CoreFoundationArray* CoreFoundationArrayInitialize(const void** objects, CInteger count) {
 #ifdef ONLINE_JUDGE
   let size = sizeof(CoreFoundationArray);
   let array = (CoreFoundationArray*)CMemoryAllocate(size);
@@ -80,10 +70,7 @@ CInteger CoreFoundationArrayGetCount(CoreFoundationArray* array) {
   return count;
 }
 
-CoreFoundationAnyObject* CoreFoundationArrayGetObjectAtIndex(
-  CoreFoundationArray* array,
-  CInteger index
-) {
+CoreFoundationAnyObject* CoreFoundationArrayGetObjectAtIndex(CoreFoundationArray* array, CInteger index) {
   CoreFoundationRetain(array);
 
   let object = array->objects[index];
@@ -93,10 +80,26 @@ CoreFoundationAnyObject* CoreFoundationArrayGetObjectAtIndex(
   return object;
 }
 
-C_INITIALIZER
-void CoreFoundationArrayRegisterClass() {
-  CoreFoundationClassTable[kCoreFoundationTypeIDArray].deinitialize =
-    CoreFoundationArrayDeinitialize;
+CInteger CoreFoundationArrayFindFirstIndexOfObjectIdenticalToObject(CoreFoundationArray* array, CoreFoundationAnyObject* object) {
+  CoreFoundationRetain(array);
+
+  let index = -1l;
+  let i = 0l;
+  for (; i < array->count; i += 1) {
+    if (array->objects[i] == object) {
+      index = i;
+
+      break;
+    }
+  }
+
+  CoreFoundationRelease(array);
+
+  return index;
+}
+
+C_INITIALIZER void CoreFoundationArrayRegisterClass() {
+  CoreFoundationClassTable[kCoreFoundationTypeIDArray].deinitialize = CoreFoundationArrayDeinitialize;
 }
 
 C_ASSUME_NONNULL_END
