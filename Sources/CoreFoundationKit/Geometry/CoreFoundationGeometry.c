@@ -4,53 +4,38 @@
  *
  *  Created by Fang Ling on 2026/5/3.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ *  See the License for the specific language governing permissions and limitations under the License.
  */
 
 #include "CoreFoundationGeometry.h"
 
 C_ASSUME_NONNULL_BEGIN
 
-const CoreFoundationPoint CoreFoundationPointZero = (CoreFoundationPoint){ 0 };
+const CoreFoundationPoint CoreFoundationPointZero = (CoreFoundationPoint){0};
 
-const CoreFoundationSize CoreFoundationSizeZero = (CoreFoundationSize){ 0 };
+const CoreFoundationSize CoreFoundationSizeZero = (CoreFoundationSize){0};
 
-const CoreFoundationRectangle CoreFoundationRectangleZero = (CoreFoundationRectangle){ 0 };
+const CoreFoundationRectangle CoreFoundationRectangleZero = (CoreFoundationRectangle){0};
 
-const CoreFoundationRectangle CoreFoundationRectangleNull = (CoreFoundationRectangle){ { CFloatingPointNaN, CFloatingPointNaN }, { CFloatingPointNaN, CFloatingPointNaN } };
+const CoreFoundationRectangle CoreFoundationRectangleNull = (CoreFoundationRectangle){{CFloatingPointNaN, CFloatingPointNaN}, {CFloatingPointNaN, CFloatingPointNaN}};
 
-CBoolean CoreFoundationPointEqual(
-  CoreFoundationPoint lhs,
-  CoreFoundationPoint rhs
-) {
-  return lhs.x == rhs.x && lhs.y == rhs.y;
+CBoolean CoreFoundationPointIsEqual(CoreFoundationPoint p1, CoreFoundationPoint p2) {
+  return p1.x == p2.x && p1.y == p2.y;
 }
 
-CBoolean CoreFoundationSizeEqual(
-  CoreFoundationSize lhs,
-  CoreFoundationSize rhs
-) {
-  return lhs.width == rhs.width && lhs.height == rhs.height;
+CBoolean CoreFoundationSizeIsEqual(CoreFoundationSize s1, CoreFoundationSize s2) {
+  return s1.width == s2.width && s1.height == s2.height;
 }
 
-CBoolean CoreFoundationRectangleIsEqual(
-  CoreFoundationRectangle lhs,
-  CoreFoundationRectangle rhs
-) {
-  return (
-    CoreFoundationPointEqual(lhs.origin, rhs.origin) &&
-    CoreFoundationSizeEqual(lhs.size, rhs.size)
-  );
+CBoolean CoreFoundationRectangleIsEqual(CoreFoundationRectangle r1, CoreFoundationRectangle r2) {
+  return CoreFoundationPointIsEqual(r1.origin, r2.origin) && CoreFoundationSizeIsEqual(r1.size, r2.size);
 }
 
 CBoolean CoreFoundationRectangleIsNull(CoreFoundationRectangle rectangle) {
@@ -111,17 +96,16 @@ CoreFoundationRectangle CoreFoundationRectangleIntersect(CoreFoundationRectangle
   r1 = CoreFoundationRectangleStandardize(r1);
   r2 = CoreFoundationRectangleStandardize(r2);
 
-  if (
-    r1.origin.x + r1.size.width <= r2.origin.x ||
-    r2.origin.x + r2.size.width <= r1.origin.x ||
-    r1.origin.y + r1.size.height <= r2.origin.y ||
-    r2.origin.y + r2.size.height <= r1.origin.y
-  ) {
+  let isR1LeftOfR2 = r1.origin.x + r1.size.width <= r2.origin.x;
+  let isR2LeftOfR1 = r2.origin.x + r2.size.width <= r1.origin.x;
+  let isR1AboveR2 = r1.origin.y + r1.size.height <= r2.origin.y;
+  let isR2AboveR1 = r2.origin.y + r2.size.height <= r1.origin.y;
+  if (isR1LeftOfR2 || isR2LeftOfR1 || isR1AboveR2 || isR2AboveR1) {
     return CoreFoundationRectangleNull;
   }
 
-  rectangle.origin.x = (r1.origin.x > r2.origin.x ? r1.origin.x : r2.origin.x);
-  rectangle.origin.y = (r1.origin.y > r2.origin.y ? r1.origin.y : r2.origin.y);
+  rectangle.origin.x = r1.origin.x > r2.origin.x ? r1.origin.x : r2.origin.x;
+  rectangle.origin.y = r1.origin.y > r2.origin.y ? r1.origin.y : r2.origin.y;
 
   if (r1.origin.x + r1.size.width < r2.origin.x + r2.size.width) {
     rectangle.size.width = r1.origin.x + r1.size.width - rectangle.origin.x;

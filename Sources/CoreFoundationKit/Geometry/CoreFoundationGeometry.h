@@ -4,17 +4,14 @@
  *
  *  Created by Fang Ling on 2026/5/3.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
+ *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ *  See the License for the specific language governing permissions and limitations under the License.
  */
 
 #ifndef CoreFoundationGeometry_h
@@ -76,8 +73,7 @@ extern const CoreFoundationRectangle CoreFoundationRectangleNull;
  *
  * - Returns: A point.
  */
-#define CoreFoundationPointMake(x, y) \
-  ((CoreFoundationPoint){ (x), (y) })
+#define CoreFoundationPointMake(x, y) ((CoreFoundationPoint){(x), (y)})
 
 /**
  * Returns a size with the specified dimension values.
@@ -88,8 +84,7 @@ extern const CoreFoundationRectangle CoreFoundationRectangleNull;
  *
  * - Returns: Returns a size structure with the specified width and height.
  */
-#define CoreFoundationSizeMake(width, height) \
-  ((CoreFoundationSize){ (width), (height) })
+#define CoreFoundationSizeMake(width, height) ((CoreFoundationSize){(width), (height)})
 
 /**
  * Returns a rectangle with the specified coordinate and size values.
@@ -102,20 +97,29 @@ extern const CoreFoundationRectangle CoreFoundationRectangleNull;
  *
  * - Returns: A rectangle with the specified location and dimensions.
  */
-#define CoreFoundationRectangleMake(x, y, width, height) \
-  ((CoreFoundationRectangle){ \
-    .origin = (CoreFoundationPoint){ (x), (y) }, \
-    .size = (CoreFoundationSize){ (width), (height) } })
+#define CoreFoundationRectangleMake(x, y, width, height) ((CoreFoundationRectangle){.origin = (CoreFoundationPoint){(x), (y)}, .size = (CoreFoundationSize){(width), (height)}})
 
-CBoolean CoreFoundationPointEqual(
-  CoreFoundationPoint lhs,
-  CoreFoundationPoint rhs
-);
+/**
+ * Returns whether two points are equal.
+ *
+ * - Parameters:
+ *   - p1: The first point to examine.
+ *   - p2: The second point to examine.
+ *
+ * - Returns: `yes` if the two specified points have equal x and y values; otherwise, `no`.
+ */
+CBoolean CoreFoundationPointIsEqual(CoreFoundationPoint p1, CoreFoundationPoint p2);
 
-CBoolean CoreFoundationSizeEqual(
-  CoreFoundationSize lhs,
-  CoreFoundationSize rhs
-);
+/**
+ * Returns whether two sizes are equal.
+ *
+ * - Parameters:
+ *   - s1: The first size to examine.
+ *   - s2: The second size to examine.
+ *
+ * - Returns: `yes` if the two specified sizes have equal width and height values; otherwise, `no`.
+ */
+CBoolean CoreFoundationSizeIsEqual(CoreFoundationSize s1, CoreFoundationSize s2);
 
 /**
  * Returns whether two rectangles are equal in size and position.
