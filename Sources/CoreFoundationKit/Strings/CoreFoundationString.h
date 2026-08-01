@@ -98,7 +98,7 @@ C_SWIFT_NAME(getter:_CoreFoundationString.count(self:));
  *
  * - Parameters:
  *   - string: The string from which the Unicode character is obtained.
- *   - index: The position of the Unicode character in the String.
+ *   - index: The position of the Unicode character in the `string`.
  *
  * - Returns: A Unicode character.
  */
