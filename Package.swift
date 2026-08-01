@@ -1,28 +1,26 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.3
 
+//===--------------------------------------------------------------------------------------------------------------------------------------------------------------------------===//
 //
 //  Package.swift
 //  core-foundation-kit
 //
 //  Created by Fang Ling on 2026/4/25.
 //
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
+//  This source file is part of the CoreFoundationKit open source project
 //
-//    http://www.apache.org/licenses/LICENSE-2.0
+//  Copyright (c) 2026 Fang Ling <fangling@fangl.ing>
+//  Licensed under Apache License v2.0
 //
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
+//  See LICENSE for license information
 //
+//  SPDX-License-Identifier: Apache-2.0
+//
+//===--------------------------------------------------------------------------------------------------------------------------------------------------------------------------===//
 
 import PackageDescription
 
 let isDevelopment = false
-let isOnlineJudge = false
 
 let dependencies = [
   ("c-kit", "main")
@@ -33,13 +31,7 @@ let package = Package(
   products: [
     .library(name: "CoreFoundationKit", targets: ["CoreFoundationKit"])
   ],
-  dependencies: dependencies.map({
-    if isDevelopment {
-      return .package(path: "../\($0.0)")
-    } else {
-      return .package(url: "https://github.com/fang-ling/\($0.0)", branch: $0.1)
-    }
-  }),
+  dependencies: dependencies.map { isDevelopment ? .package(path: "../\($0.0)") : .package(url: "https://github.com/fang-ling/\($0.0)", branch: $0.1) },
   targets: [
     .target(
       name: "CoreFoundationKit",
@@ -47,7 +39,7 @@ let package = Package(
         .product(name: "CKit", package: "c-kit")
       ],
       publicHeadersPath: "Includes",
-      cSettings: isOnlineJudge ? [.define("ONLINE_JUDGE")] : []
+      cSettings: Context.environment["ONLINE_JUDGE"] != nil ? [.define("ONLINE_JUDGE")] : []
     )
   ],
   cLanguageStandard: .c89

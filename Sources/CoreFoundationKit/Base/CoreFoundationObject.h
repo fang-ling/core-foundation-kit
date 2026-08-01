@@ -1,28 +1,25 @@
-/*
+/*===--------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*
+ *
  *  CoreFoundationObject.h
  *  core-foundation-kit
  *
  *  Created by Fang Ling on 2026/4/25.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ *  This source file is part of the CoreFoundationKit open source project
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *  Copyright (c) 2026 Fang Ling <fangling@fangl.ing>
+ *  Licensed under Apache License v2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
+ *  See LICENSE for license information
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ *===--------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*/
 
 #ifndef CoreFoundationObject_h
 #define CoreFoundationObject_h
 
 #include <CKit/CKit.h>
-
-#include "../Strings/CoreFoundationString.h"
 
 C_ASSUME_NONNULL_BEGIN
 
@@ -31,21 +28,18 @@ typedef void CoreFoundationAnyObject;
 typedef struct _CoreFoundationObject {
   void* isa;
 
-#ifdef ONLINE_JUDGE
-  CUnsignedInteger32 referenceCount;
+  CUnsignedInteger64 referenceCount;
 
+#if C_TARGET_OS_ONLINE_JUDGE
   CUnsignedInteger8 typeID;
 #endif
-} CoreFoundationObject;
+} _CoreFoundationObject;
 
 typedef struct _CoreFoundationClass {
-  CoreFoundationString * nillable
-    (* nonnil copyDescription)(CoreFoundationAnyObject* object);
-
   void (*deinitialize)(CoreFoundationAnyObject* object);
-} CoreFoundationClass;
+} _CoreFoundationClass;
 
-extern CoreFoundationClass CoreFoundationClassTable[256];
+extern _CoreFoundationClass _CoreFoundationClassTable[256];
 
 typedef enum CoreFoundationTypeID {
   kCoreFoundationTypeIDNotAType = 0,
@@ -55,9 +49,33 @@ typedef enum CoreFoundationTypeID {
   kCoreFoundationTypeIDValue = 4
 } CoreFoundationTypeID;
 
-void CoreFoundationRetain(CoreFoundationAnyObject* object);
+/**
+ * Retains a CoreFoundationKit object.
+ *
+ * You should retain a CoreFoundationKit object when you receive it from elsewhere (that is, you did not create or copy it) and you want it to persist. If you retain a
+ * CoreFoundationKit object you are responsible for releasing it.
+ *
+ * ### Special Considerations
+ *
+ * If `object` is `null`, this will cause a runtime error and your application will crash.
+ *
+ * - Parameter object: The CoreFoundationKit object to retain. This value must not be `null`.
+ */
+void CoreFoundationObjectRetain(CoreFoundationAnyObject* object);
 
-void CoreFoundationRelease(CoreFoundationAnyObject* object);
+/**
+ * Releases a CoreFoundationKit object.
+ *
+ * If the retain count of `object` becomes zero the memory allocated to the object is deallocated and the object is destroyed. If you create, copy, or explicitly retain (see the
+ * ``CoreFoundationObjectRetain`` function) a CoreFoundationKit object, you are responsible for releasing it when you no longer need it.
+ *
+ * ### Special Considerations
+ *
+ * If `object` is `null`, this will cause a runtime error and your application will crash.
+ *
+ * - Parameter object: A CoreFoundationKit object to release. This value must not be `null`.
+ */
+void CoreFoundationObjectRelease(CoreFoundationAnyObject* object);
 
 C_ASSUME_NONNULL_END
 
