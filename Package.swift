@@ -40,6 +40,12 @@ let package = Package(
       ],
       publicHeadersPath: "Includes",
       cSettings: Context.environment["ONLINE_JUDGE"] != nil ? [.define("ONLINE_JUDGE")] : []
+    ),
+    .testTarget(
+      name: "CoreFoundationKitTests",
+      dependencies: [
+        "CoreFoundationKit"
+      ]
     )
   ],
   cLanguageStandard: .c89

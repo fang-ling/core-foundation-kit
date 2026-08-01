@@ -1,333 +1,72 @@
-/*
+/*===--------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*
+ *
  *  CoreFoundationString.c
  *  core-foundation-kit
  *
  *  Created by Fang Ling on 2026/4/26.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ *  This source file is part of the CoreFoundationKit open source project
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *  Copyright (c) 2026 Fang Ling <fangling@fangl.ing>
+ *  Licensed under Apache License v2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
+ *  See LICENSE for license information
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ *===--------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*/
 
 #include "CoreFoundationString.h"
 
-#include "../Base/CoreFoundationObject.h"
-
 C_ASSUME_NONNULL_BEGIN
 
-#ifndef ONLINE_JUDGE
-  extern CoreFoundationAnyObject*
-  FoundationCoreFoundationStringInitializeWithCString(CString cString);
+struct _CoreFoundationString {
+  _CoreFoundationObject _object;
 
-  extern CoreFoundationAnyObject*
-  ObjectiveCObjectCopyDescription(CoreFoundationAnyObject* object);
-#endif /* !ONLINE_JUDGE */
-
-struct CoreFoundationString {
-  CoreFoundationObject object;
-
-  CInteger32* characters;
-  CInteger count;
+  CUnsignedInteger32* _characters;
+  CInteger _count;
 };
 
-CoreFoundationString* nillable
-CoreFoundationStringInitializeWithCString(CString cString) {
-#ifdef ONLINE_JUDGE
-  let size = sizeof(CoreFoundationString);
-  let string = (CoreFoundationString*)CMemoryAllocate(size);
+CoreFoundationString CoreFoundationStringInitializeWithCharacters(const CUnsignedInteger32* characters, CInteger count) {
+#if C_TARGET_OS_ONLINE_JUDGE
+  let string = (struct _CoreFoundationString*)CMemoryAllocate(1, sizeof(struct _CoreFoundationString));
 
-  string->object.isa = null;
-  string->object.referenceCount = 1;
-  string->object.typeID = kCoreFoundationTypeIDString;
+  string->_object.isa = null;
+  string->_object.referenceCount = 1;
+  string->_object.typeID = kCoreFoundationTypeIDString;
 
-  let cStringCount = CStringGetCount(cString);
-  let count = CStringConvertUTF8CharactersToUTF32Characters(
-    null,
-    cString,
-    cStringCount,
-    0
-  );
-
-  string->characters = CMemoryAllocate(count * sizeof(CInteger32));
-
-  CStringConvertUTF8CharactersToUTF32Characters(
-    string->characters,
-    cString,
-    cStringCount,
-    count
-  );
-  if (count == -1ull) {
-    CMemoryDeallocate(string->characters);
-    CMemoryDeallocate(string);
-
-    return null;
-  }
-
-  string->count = count;
+  string->_characters = CMemoryAllocate(count, sizeof(CUnsignedInteger32));
+  string->_count = count;
+  CMemoryCopy(string->_characters, characters, count * sizeof(CUnsignedInteger32));
 
   return string;
 #else
-  return FoundationCoreFoundationStringInitializeWithCString(cString);
+  return _CoreFoundationStringInitializeWithCharacters(characters, count);
 #endif
 }
 
-#ifdef ONLINE_JUDGE
-CoreFoundationString* nillable
-CoreFoundationStringInitializeWithFormat(CString format, ...) {
-  let arguments = (CVariableArgumentList){ 0 };
-  CVariableArgumentListInitialize(arguments, format);
-
-  let cString = (CInteger8*)CMemoryAllocate(1 * sizeof(CInteger8));
-  let cStringCapacity = 1ll;
-  let cStringCount = 0ll;
-
-  let formatCount = CStringGetCount(format);
-  let i = 0ll;
-  for (; i < formatCount; i += 1) {
-    let buffer = (CInteger8*)null;
-    let bufferCount = 0ll;
-    let needsDeallocate = no;
-
-    if (format[i] == '%' && format[i + 1] == 'd') {
-      let value = CVariableArgumentListGetNextArgument(arguments, CInteger);
-
-      buffer = (CInteger8 [32]){ 0 };
-      bufferCount = CStringInitializeWithFormat(buffer, "%ld", value);
-
-      i += 1;
-      needsDeallocate = no;
-    } else if (format[i] == '%' && format[i + 1] == 'f') {
-      let value = CVariableArgumentListGetNextArgument(
-        arguments,
-        CFloatingPoint64
-      );
-
-      buffer = (CInteger8 [32]){ 0 };
-      bufferCount = CStringInitializeWithFormat(buffer, "%lf", value);
-
-      i += 1;
-      needsDeallocate = no;
-    } else if (format[i] == '%' && format[i + 1] == '@') {
-      let value = CVariableArgumentListGetNextArgument(
-        arguments,
-        CoreFoundationAnyObject*
-      );
-      CoreFoundationRetain(value);
-
-      let typeID = ((CoreFoundationObject*)value)->typeID;
-      let class = CoreFoundationClassTable[typeID];
-      let descriptionString = class.copyDescription(value);
-
-      bufferCount = CoreFoundationStringGetCStringCount(descriptionString);
-      buffer = (CInteger8*)CMemoryAllocate(
-        (bufferCount + 1) * sizeof(CInteger8)
-      );
-      CoreFoundationStringCopyCString(descriptionString, buffer);
-
-      CoreFoundationRelease(value);
-      CoreFoundationRelease(descriptionString);
-
-      i += 1;
-      needsDeallocate = yes;
-    } else {
-      let j = i;
-      for (; j < formatCount && format[j] != '%'; j += 1);
-
-      bufferCount = j - i;
-      buffer = (CInteger8*)CMemoryAllocate(bufferCount * sizeof(CInteger8));
-
-      let k = 0ll;
-      for (j = i; k < bufferCount; k += 1, j += 1) {
-        buffer[k] = format[j];
-      }
-
-      i = j - 1;
-      needsDeallocate = yes;
-    }
-
-    /* Append the buffer to cString. */
-    while (cStringCapacity < cStringCount + bufferCount + 1) {
-      cStringCapacity *= 2;
-      cString = CMemoryResize(cString, cStringCapacity * sizeof(CInteger8));
-    }
-    CMemoryCopy(
-      cString + cStringCount,
-      buffer,
-      bufferCount * sizeof(CInteger8)
-    );
-    cStringCount += bufferCount;
-
-    if (needsDeallocate) {
-      CMemoryDeallocate(buffer);
-    }
-  }
-
-  cString[cStringCount] = '\0';
-  let string = CoreFoundationStringInitializeWithCString(cString);
-
-  CMemoryDeallocate(cString);
-
-  CVariableArgumentListDeinitialize(arguments);
-
-  return string;
-}
-#endif /* ONLINE_JUDGE */
-
-void CoreFoundationStringDeinitialize(CoreFoundationAnyObject* string) {
-  CMemoryDeallocate(((CoreFoundationString*)string)->characters);
+void _CoreFoundationStringRetain(CoreFoundationString string) {
+  CoreFoundationObjectRetain((void*)string);
 }
 
-CoreFoundationString*
-CoreFoundationStringCopyDescription(CoreFoundationAnyObject* string) {
-  CoreFoundationRetain(string);
-
-  /* TODO: Copy self. */
-  let copy = CoreFoundationStringInitializeWithCString("");
-  CMemoryDeallocate(copy->characters);
-  copy->count = ((CoreFoundationString*)string)->count;
-  copy->characters = CMemoryAllocate(copy->count, sizeof(CInteger32));
-  CMemoryCopy(
-    copy->characters,
-    ((CoreFoundationString*)string)->characters,
-    copy->count * sizeof(CInteger32)
-  );
-
-  CoreFoundationRelease(string);
-
-  return copy;
+void _CoreFoundationStringRelease(CoreFoundationString string) {
+  CoreFoundationObjectRelease((void*)string);
 }
 
-CInteger CoreFoundationStringGetCount(CoreFoundationString* string) {
-  CoreFoundationRetain(string);
-  let count = string->count;
-
-  CoreFoundationRelease(string);
-
-  return count;
+void _CoreFoundationStringDeinitialize(CoreFoundationAnyObject* string) {
+  CMemoryDeallocate(((CoreFoundationString)string)->_characters);
 }
 
-CInteger
-CoreFoundationStringGetCStringCount(CoreFoundationString* string) {
-  CoreFoundationRetain(string);
-
-  let count = CStringConvertUTF32CharactersToUTF8Characters(
-    null,
-    string->characters,
-    string->count,
-    0
-  );
-
-  CoreFoundationRelease(string);
-
-  return count;
+CInteger CoreFoundationStringGetCount(CoreFoundationString string) {
+  return string->_count;
 }
 
-CInteger32 CoreFoundationStringGetCharacterAtIndex(
-  CoreFoundationString* string,
-  CInteger index
-) {
-  CoreFoundationRetain(string);
-
-  let character = string->characters[index];
-
-  CoreFoundationRelease(string);
-
-  return character;
+CUnsignedInteger32 CoreFoundationStringGetCharacterAtIndex(CoreFoundationString string, CInteger index) {
+  return string->_characters[index];
 }
 
-void CoreFoundationStringCopyCharacters(
-  CoreFoundationString* string,
-  CInteger32* characters
-) {
-  CoreFoundationRetain(string);
-
-  CMemoryCopy(
-    characters,
-    string->characters,
-    string->count * sizeof(CInteger32)
-  );
-
-  CoreFoundationRelease(string);
-}
-
-void CoreFoundationStringCopyCString(
-  CoreFoundationString* string,
-  CInteger8* cString
-) {
-  CoreFoundationRetain(string);
-
-  let count = CStringConvertUTF32CharactersToUTF8Characters(
-    cString,
-    string->characters,
-    string->count,
-    string->count
-  );
-  cString[count] = '\0';
-
-  CoreFoundationRelease(string);
-}
-
-CoreFoundationComparisonResult CoreFoundationStringCompare(
-  CoreFoundationString* string1,
-  CoreFoundationString* string2
-) {
-  CoreFoundationRetain(string1);
-  CoreFoundationRetain(string2);
-
-  let characters1 = (CInteger32*)CMemoryAllocate(
-    string1->count + 1,
-    sizeof(CInteger32)
-  );
-  let characters2 = (CInteger32*)CMemoryAllocate(
-    string2->count + 1,
-    sizeof(CInteger32)
-  );
-
-  CMemoryCopy(
-    characters1,
-    string1->characters,
-    string1->count * sizeof(CInteger32)
-  );
-  CMemoryCopy(
-    characters2,
-    string2->characters,
-    string2->count * sizeof(CInteger32)
-  );
-  characters1[string1->count] = '\0';
-  characters2[string2->count] = '\0';
-
-  let result = CStringCompareUTF32Characters(characters1, characters2);
-
-  let comparisonResult = kCoreFoundationComparisonResultSameOrder;
-  if (result < 0) {
-    comparisonResult = kCoreFoundationComparisonResultAscendingOrder;
-  } else if (result > 0) {
-    comparisonResult = kCoreFoundationComparisonResultDescendingOrder;
-  }
-
-  CMemoryDeallocate(characters1);
-  CMemoryDeallocate(characters2);
-
-  CoreFoundationRelease(string1);
-  CoreFoundationRelease(string2);
-
-  return comparisonResult;
-}
-
-C_INITIALIZER
-void CoreFoundationStringRegisterClass() {
-  CoreFoundationClassTable[kCoreFoundationTypeIDString].deinitialize =
-    CoreFoundationStringDeinitialize;
-  CoreFoundationClassTable[kCoreFoundationTypeIDString].copyDescription =
-    CoreFoundationStringCopyDescription;
+C_INITIALIZER void CoreFoundationStringRegisterClass() {
+  _CoreFoundationClassTable[kCoreFoundationTypeIDString].deinitialize = _CoreFoundationStringDeinitialize;
 }
 
 C_ASSUME_NONNULL_END
