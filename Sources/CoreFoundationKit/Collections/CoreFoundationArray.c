@@ -1,105 +1,86 @@
-/*
+/*===----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*
+ *
  *  CoreFoundationArray.c
  *  core-foundation-kit
  *
  *  Created by Fang Ling on 2026/5/2.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ *  This source file is part of the CoreFoundationKit open source project
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *  Copyright (c) 2026 Fang Ling <fangling@fangl.ing>
+ *  Licensed under Apache License v2.0
  *
- *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and limitations under the License.
- */
+ *  See LICENSE for license information
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ *===----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*/
 
 #include "CoreFoundationArray.h"
 
-#include "CoreFoundationArray+Private.h"
-
 C_ASSUME_NONNULL_BEGIN
 
-#if !C_TARGET_OS_ONLINE_JUDGE
-extern CoreFoundationAnyObject* FoundationCoreFoundationArrayInitialize(const void** objects, CInteger count, CBoolean isMutable);
-#endif
+struct _CoreFoundationArray {
+  _CoreFoundationObject _object;
 
-CoreFoundationArray* CoreFoundationArrayInitialize(const void** objects, CInteger count) {
-#ifdef ONLINE_JUDGE
-  let size = sizeof(CoreFoundationArray);
-  let array = (CoreFoundationArray*)CMemoryAllocate(size);
+  CoreFoundationAnyObject** _objects;
+  CInteger _count;
+  CInteger _capacity;
+  CBoolean _isMutable;
+};
 
-  array->object.isa = null;
-  array->object.referenceCount = 1;
-  array->object.typeID = kCoreFoundationTypeIDArray;
+CoreFoundationArray CoreFoundationArrayInitialize(const void* const * objects, CInteger count, CBoolean isMutable) {
+#if C_TARGET_OS_ONLINE_JUDGE
+  let array = (struct _CoreFoundationArray*)CMemoryAllocate(1, sizeof(struct _CoreFoundationArray));
 
-  array->objects = CMemoryAllocate(count * sizeof(const void*));
-  array->count = count;
-  array->capacity = count;
-  array->mutationCount = 0;
-  array->isMutable = no;
+  array->_object.isa = null;
+  array->_object.referenceCount = 1;
+  array->_object.typeID = kCoreFoundationTypeIDArray;
+
+  array->_objects = CMemoryAllocate(count, sizeof(const void*));
+  array->_count = count;
+  array->_capacity = count;
+  array->_isMutable = isMutable;
 
   let i = 0;
   for (; i < count; i += 1) {
-    CoreFoundationRetain(objects[i]);
-    array->objects[i] = objects[i];
+    CoreFoundationObjectRetain((void*)objects[i]);
+    array->_objects[i] = (void*)objects[i];
   }
 
   return array;
 #else
-  return FoundationCoreFoundationArrayInitialize(objects, count, no);
+  return _CoreFoundationArrayInitialize(objects, count, isMutable);
 #endif
 }
 
-void CoreFoundationArrayDeinitialize(CoreFoundationAnyObject* array) {
+void _CoreFoundationArrayRetain(CoreFoundationArray array) {
+  CoreFoundationObjectRetain((void*)array);
+}
+
+void _CoreFoundationArrayRelease(CoreFoundationArray array) {
+  CoreFoundationObjectRelease((void*)array);
+}
+
+void _CoreFoundationArrayDeinitialize(CoreFoundationAnyObject* array) {
   let i = 0;
-  for (; i < ((CoreFoundationArray*)array)->count; i += 1) {
-    CoreFoundationRelease(((CoreFoundationArray*)array)->objects[i]);
+  for (; i < ((CoreFoundationArray)array)->_count; i += 1) {
+    CoreFoundationObjectRelease(((CoreFoundationArray)array)->_objects[i]);
   }
 
-  CMemoryDeallocate(((CoreFoundationArray*)array)->objects);
+  CMemoryDeallocate(((CoreFoundationArray)array)->_objects);
 }
 
-CInteger CoreFoundationArrayGetCount(CoreFoundationArray* array) {
-  CoreFoundationRetain(array);
-
-  let count = array->count;
-
-  CoreFoundationRelease(array);
-
-  return count;
+CInteger CoreFoundationArrayGetCount(CoreFoundationArray array) {
+  return array->_count;
 }
 
-CoreFoundationAnyObject* CoreFoundationArrayGetObjectAtIndex(CoreFoundationArray* array, CInteger index) {
-  CoreFoundationRetain(array);
-
-  let object = array->objects[index];
-
-  CoreFoundationRelease(array);
-
-  return object;
-}
-
-CInteger CoreFoundationArrayFindFirstIndexOfObjectIdenticalToObject(CoreFoundationArray* array, CoreFoundationAnyObject* object) {
-  CoreFoundationRetain(array);
-
-  let index = -1l;
-  let i = 0l;
-  for (; i < array->count; i += 1) {
-    if (array->objects[i] == object) {
-      index = i;
-
-      break;
-    }
-  }
-
-  CoreFoundationRelease(array);
-
-  return index;
+CoreFoundationAnyObject* CoreFoundationArrayGetObjectAtIndex(CoreFoundationArray array, CInteger index) {
+  return array->_objects[index];
 }
 
 C_INITIALIZER void CoreFoundationArrayRegisterClass() {
-  CoreFoundationClassTable[kCoreFoundationTypeIDArray].deinitialize = CoreFoundationArrayDeinitialize;
+  _CoreFoundationClassTable[kCoreFoundationTypeIDArray].deinitialize = _CoreFoundationArrayDeinitialize;
 }
 
 C_ASSUME_NONNULL_END
