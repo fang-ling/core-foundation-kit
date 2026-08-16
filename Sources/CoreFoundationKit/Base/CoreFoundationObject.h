@@ -1,4 +1,4 @@
-/*===--------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*
+/*===----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*
  *
  *  CoreFoundationObject.h
  *  core-foundation-kit
@@ -14,7 +14,7 @@
  *
  *  SPDX-License-Identifier: Apache-2.0
  *
- *===--------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*/
+ *===----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*/
 
 #ifndef CoreFoundationObject_h
 #define CoreFoundationObject_h
@@ -23,20 +23,16 @@
 
 C_ASSUME_NONNULL_BEGIN
 
-typedef void CoreFoundationAnyObject;
+typedef void* CoreFoundationAnyObject;
 
 typedef struct _CoreFoundationObject {
-  void* isa;
-
-  CUnsignedInteger64 referenceCount;
-
-#if C_TARGET_OS_ONLINE_JUDGE
-  CUnsignedInteger8 typeID;
-#endif
+  CUnsignedInteger _metadata;
+  CUnsignedInteger64 _referenceCount;
+  CUnsignedInteger8 _typeID;
 } _CoreFoundationObject;
 
 typedef struct _CoreFoundationClass {
-  void (*deinitialize)(CoreFoundationAnyObject* object);
+  void (*_deinitialize)(CoreFoundationAnyObject object);
 } _CoreFoundationClass;
 
 extern _CoreFoundationClass _CoreFoundationClassTable[256];
@@ -52,8 +48,8 @@ typedef enum CoreFoundationTypeID {
 /**
  * Retains a CoreFoundationKit object.
  *
- * You should retain a CoreFoundationKit object when you receive it from elsewhere (that is, you did not create or copy it) and you want it to persist. If you retain a
- * CoreFoundationKit object you are responsible for releasing it.
+ * You should retain a CoreFoundationKit object when you receive it from elsewhere (that is, you did not create or copy it) and you want it to persist. If you retain a CoreFoundationKit object you are
+ * responsible for releasing it.
  *
  * ### Special Considerations
  *
@@ -61,7 +57,7 @@ typedef enum CoreFoundationTypeID {
  *
  * - Parameter object: The CoreFoundationKit object to retain. This value must not be `null`.
  */
-void CoreFoundationObjectRetain(CoreFoundationAnyObject* object);
+void CoreFoundationObjectRetain(CoreFoundationAnyObject object);
 
 /**
  * Releases a CoreFoundationKit object.
@@ -75,7 +71,7 @@ void CoreFoundationObjectRetain(CoreFoundationAnyObject* object);
  *
  * - Parameter object: A CoreFoundationKit object to release. This value must not be `null`.
  */
-void CoreFoundationObjectRelease(CoreFoundationAnyObject* object);
+void CoreFoundationObjectRelease(CoreFoundationAnyObject object);
 
 C_ASSUME_NONNULL_END
 

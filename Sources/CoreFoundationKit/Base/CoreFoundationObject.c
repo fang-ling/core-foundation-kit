@@ -1,4 +1,4 @@
-/*===--------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*
+/*===----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*
  *
  *  CoreFoundationObject.c
  *  core-foundation-kit
@@ -14,7 +14,7 @@
  *
  *  SPDX-License-Identifier: Apache-2.0
  *
- *===--------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*/
+ *===----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*/
 
 #include "CoreFoundationObject.h"
 
@@ -27,38 +27,38 @@ extern void swift_release(void* object);
 
 _CoreFoundationClass _CoreFoundationClassTable[256];
 
-void CoreFoundationObjectRetain(CoreFoundationAnyObject* object) {
-  if (object == null) {
-    CDebuggingHaltWithMessage("*** CoreFoundationObjectRetain() CALLED WITH null. ***");
-  }
+void CoreFoundationObjectRetain(CoreFoundationAnyObject object) {
+  CDebuggingPrecondition(object != null, "*** CoreFoundationObjectRetain() CALLED WITH null. ***");
 
+  if (((_CoreFoundationObject*)object)->_metadata == 0) {
+    CAtomicityIncrease(&((_CoreFoundationObject*)object)->_referenceCount);
+  } else {
 #if !C_TARGET_OS_ONLINE_JUDGE
-  swift_retain(object);
-#else
-  CAtomicityIncrease(&((_CoreFoundationObject*)object)->referenceCount);
+    swift_retain(object);
 #endif
+  }
 }
 
-void CoreFoundationObjectRelease(CoreFoundationAnyObject* object) {
-  if (object == null) {
-    CDebuggingHaltWithMessage("*** CoreFoundationObjectRelease() CALLED WITH null. ***");
-  }
+void CoreFoundationObjectRelease(CoreFoundationAnyObject object) {
+  CDebuggingPrecondition(object != null, "*** CoreFoundationObjectRelease() CALLED WITH null. ***");
 
-#if !C_TARGET_OS_ONLINE_JUDGE
-  objc_release(object);
-#else
-  CAtomicityReleaseMemoryBarrier();
+  if (((_CoreFoundationObject*)object)->_metadata == 0) {
+    CAtomicityReleaseMemoryBarrier();
 
-  if (CAtomicityDecrease(&((_CoreFoundationObject*)object)->referenceCount) <= 0) {
-    CAtomicityAcquireMemoryBarrier();
+    if (CAtomicityDecrease(&((_CoreFoundationObject*)object)->_referenceCount) <= 0) {
+      CAtomicityAcquireMemoryBarrier();
 
-    if (_CoreFoundationClassTable[((_CoreFoundationObject*)object)->typeID].deinitialize) {
-      _CoreFoundationClassTable[((_CoreFoundationObject*)object)->typeID].deinitialize(object);
+      if (_CoreFoundationClassTable[((_CoreFoundationObject*)object)->_typeID]._deinitialize) {
+        _CoreFoundationClassTable[((_CoreFoundationObject*)object)->_typeID]._deinitialize(object);
+      }
+
+      CMemoryDeallocate(object);
     }
-
-    CMemoryDeallocate(object);
-  }
+  } else {
+#if !C_TARGET_OS_ONLINE_JUDGE
+    swift_release(object);
 #endif
+  }
 }
 
 C_ASSUME_NONNULL_END
