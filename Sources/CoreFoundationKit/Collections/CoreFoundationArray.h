@@ -67,13 +67,10 @@ typedef struct C_SWIFT_SHARED_REFERENCE(_CoreFoundationArrayRetain, _CoreFoundat
  *     if `count` is 0. This C array is not changed or freed by this function. If `objects` is not a valid pointer to a C array of at least `count` elements, the behavior is undefined.
  *   - count: The number of objects to copy from the values C array into the new array. This number will be the count of the new array—it must not be negative or greater than the number of elements in
  *     `objects`.
- *   - isMutable: A Boolean value indicating whether the new array is mutable.
  */
-CoreFoundationArray CoreFoundationArrayInitialize(const void* const nonnil * nillable objects, CInteger count, CBoolean isMutable)
+CoreFoundationArray CoreFoundationArrayInitialize(CoreFoundationAnyObject const nonnil * nillable objects, CInteger count)
 C_SWIFT_RETURNS_RETAINED
-C_SWIFT_NAME(_CoreFoundationArray.init(objects:count:isMutable:));
-
-CoreFoundationAnyObject* _CoreFoundationArrayInitialize(const void* const nonnil * nillable objects, CInteger count, CBoolean isMutable);
+C_SWIFT_NAME(_CoreFoundationArray.init(objects:count:));
 
 void _CoreFoundationArrayRetain(CoreFoundationArray array);
 
@@ -98,7 +95,7 @@ C_SWIFT_NAME(getter:_CoreFoundationArray.count(self:));
  *
  * - Returns: The object at the index in the array.
  */
-CoreFoundationAnyObject* CoreFoundationArrayGetObjectAtIndex(CoreFoundationArray array, CInteger index)
+CoreFoundationAnyObject CoreFoundationArrayGetObjectAtIndex(CoreFoundationArray array, CInteger index)
 C_SWIFT_NAME(_CoreFoundationArray.object(self:at:));
 
 C_ASSUME_NONNULL_END
