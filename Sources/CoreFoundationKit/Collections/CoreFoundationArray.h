@@ -60,7 +60,7 @@ C_ASSUME_NONNULL_BEGIN
  *
  * - ``CoreFoundationArraySetObjectAtIndex``
  */
-typedef struct C_SWIFT_SHARED_REFERENCE(_CoreFoundationArrayRetain, _CoreFoundationArrayRelease) _CoreFoundationArray* CoreFoundationArray;
+typedef struct _CoreFoundationArray* CoreFoundationArray;
 
 /**
  * Creates a new array with the given objects.
@@ -71,9 +71,7 @@ typedef struct C_SWIFT_SHARED_REFERENCE(_CoreFoundationArrayRetain, _CoreFoundat
  *   - count: The number of objects to copy from the values C array into the new array. This number will be the count of the new array—it must not be negative or greater than the number of elements in
  *     `objects`.
  */
-CoreFoundationArray CoreFoundationArrayInitialize(CoreFoundationAnyObject const nonnil * nillable objects, CInteger count)
-C_SWIFT_RETURNS_RETAINED
-C_SWIFT_NAME(_CoreFoundationArray.init(objects:count:));
+CoreFoundationArray CoreFoundationArrayInitialize(CoreFoundationAnyObject const nonnil* nillable objects, CInteger count);
 
 void _CoreFoundationArrayRetain(CoreFoundationArray array);
 
@@ -86,8 +84,7 @@ void _CoreFoundationArrayRelease(CoreFoundationArray array);
  *
  * - Returns: The number of objects in the array.
  */
-CInteger CoreFoundationArrayGetCount(CoreFoundationArray array)
-C_SWIFT_NAME(getter:_CoreFoundationArray.count(self:));
+CInteger CoreFoundationArrayGetCount(CoreFoundationArray array);
 
 /**
  * Retrieves an object at a given index.
@@ -98,8 +95,7 @@ C_SWIFT_NAME(getter:_CoreFoundationArray.count(self:));
  *
  * - Returns: The object at the index in the array.
  */
-CoreFoundationAnyObject CoreFoundationArrayGetObjectAtIndex(CoreFoundationArray array, CInteger index)
-C_SWIFT_NAME(_CoreFoundationArray.object(self:at:));
+CoreFoundationAnyObject CoreFoundationArrayGetObjectAtIndex(CoreFoundationArray array, CInteger index);
 
 /**
  * Changes the object at a given index in an array.
@@ -110,8 +106,7 @@ C_SWIFT_NAME(_CoreFoundationArray.object(self:at:));
  *   - object: The object to set in the array. The object is retained by the array using the ``CoreFoundationObjectRetain`` function and the previous object at `index` is released. If the value is not
  *     of the type expected by the retain function, the behavior is undefined. The indices of other values are not affected.
  */
-void CoreFoundationArraySetObjectAtIndex(CoreFoundationArray array, CoreFoundationAnyObject object, CInteger index)
-C_SWIFT_NAME(_CoreFoundationArray.setObject(self:_:at:));
+void CoreFoundationArraySetObjectAtIndex(CoreFoundationArray array, CoreFoundationAnyObject object, CInteger index);
 
 C_ASSUME_NONNULL_END
 

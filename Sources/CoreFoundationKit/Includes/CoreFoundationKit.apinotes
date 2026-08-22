@@ -1,0 +1,17 @@
+---
+Name: CoreFoundationKit
+Tags:
+  - Name: _CoreFoundationArray
+    SwiftImportAs: reference
+    SwiftRetainOp: _CoreFoundationArrayRetain
+    SwiftReleaseOp: _CoreFoundationArrayRelease
+Functions:
+  - Name: CoreFoundationArrayInitialize
+    SwiftName: _CoreFoundationArray.init(objects:count:)
+    SwiftReturnOwnership: retained
+  - Name: CoreFoundationArrayGetCount
+    SwiftName: getter:_CoreFoundationArray.count(self:)
+  - Name: CoreFoundationArrayGetObjectAtIndex
+    SwiftName: _CoreFoundationArray.object(self:at:)
+  - Name: CoreFoundationArraySetObjectAtIndex
+    SwiftName: _CoreFoundationArray.setObject(self:_:at:)

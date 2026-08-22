@@ -1,0 +1,5 @@
+module CoreFoundationKit {
+  umbrella header "CoreFoundationKit/CoreFoundationKit.h"
+
+  export *
+}
