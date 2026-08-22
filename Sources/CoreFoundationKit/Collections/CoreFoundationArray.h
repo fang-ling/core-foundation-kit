@@ -34,17 +34,13 @@ C_ASSUME_NONNULL_BEGIN
  * `null` pointers; in most cases, though, you can use the ``kCoreFoundationNull`` constant instead.) Objects are not copied but retained when an array was created. Similarly, when an object is
  * removed from an array, it is released.
  *
- * ``CoreFoundationArray``'s two primitive functions ``CoreFoundationArrayGetCount`` and ``CoreFoundationArrayGetObjectAtIndex`` provide the basis for all other functions in its interface. The
- * ``CoreFoundationArrayGetCount`` function returns the number of elements in an array; ``CoreFoundationArrayGetObjectAtIndex`` gives you access to an array's elements by index, with index values
- * starting at `0`.
+ * ``CoreFoundationArray``'s two primitive functions ``CoreFoundationArrayGetCount`` and ``CoreFoundationArrayGetObjectAtIndex`` provide the basis for all other non-mutating functions in its
+ * interface. The ``CoreFoundationArrayGetCount`` function returns the number of elements in an array; ``CoreFoundationArrayGetObjectAtIndex`` gives you access to an array's elements by index, with
+ * index values starting at `0`.
  *
- * ``CoreFoundationArray`` provides several functions for changing the contents of an array, for example the ``CoreFoundationArrayAppendObject`` and ``CoreFoundationArrayInsertObjectAtIndex``
- * functions add objects to an array and ``CoreFoundationArrayRemoveObjectAtIndex`` removes objects from an array. You can also reorder the contents of an array using
- * ``CoreFoundationArrayExchangeObjectsAtIndices`` and ``CoreFoundationArraySortObjects``.
- *
- * ``CoreFoundationArray`` is "toll-free bridged" with its FoundationKit counterparts, ``FoundationArray`` and ``FoundationMutableArray``. This means that the CoreFoundationKit type is interchangeable
- * in function or method calls with the bridged FoundationKit object. Therefore, in a method where you see a ``FoundationArray`` or ``FoundationMutableArray`` parameter, you can pass in a
- * ``CoreFoundationArray``, and in a function where you see a ``CoreFoundationArray`` parameter, you can pass in a ``FoundationArray`` or ``FoundationMutableArray`` instance.
+ * ``CoreFoundationArray`` also provides several functions for changing the contents of an array, for example the ``CoreFoundationArrayAppendObject`` and ``CoreFoundationArrayInsertObjectAtIndex``
+ * functions add values to an array; ``CoreFoundationArrayRemoveLastObject`` and ``CoreFoundationArrayRemoveObjectAtIndex`` removes values from an array. You can also reorder the contents of an array
+ * using ``CoreFoundationArrayExchangeObjectsAtIndices`` and ``CoreFoundationArraySortObjects``.
  *
  * ## Topics
  *
@@ -52,10 +48,17 @@ C_ASSUME_NONNULL_BEGIN
  *
  * - ``CoreFoundationArrayInitialize``
  *
- * ### Examining an Array
+ * ### Inspecting an Array
  *
  * - ``CoreFoundationArrayGetCount``
+ *
+ * ### Accessing Objects
+ *
  * - ``CoreFoundationArrayGetObjectAtIndex``
+ *
+ * ### Replacing Objects
+ *
+ * - ``CoreFoundationArraySetObjectAtIndex``
  */
 typedef struct C_SWIFT_SHARED_REFERENCE(_CoreFoundationArrayRetain, _CoreFoundationArrayRelease) _CoreFoundationArray* CoreFoundationArray;
 
@@ -97,6 +100,18 @@ C_SWIFT_NAME(getter:_CoreFoundationArray.count(self:));
  */
 CoreFoundationAnyObject CoreFoundationArrayGetObjectAtIndex(CoreFoundationArray array, CInteger index)
 C_SWIFT_NAME(_CoreFoundationArray.object(self:at:));
+
+/**
+ * Changes the object at a given index in an array.
+ *
+ * - Parameters:
+ *   - array: The array in which the object is to be changed.
+ *   - index: The index at which to set the new object. The object must not lie outside the index space of the array (`0` to `N-1` inclusive, where `N` is the count of the array before the operation).
+ *   - object: The object to set in the array. The object is retained by the array using the ``CoreFoundationObjectRetain`` function and the previous object at `index` is released. If the value is not
+ *     of the type expected by the retain function, the behavior is undefined. The indices of other values are not affected.
+ */
+void CoreFoundationArraySetObjectAtIndex(CoreFoundationArray array, CoreFoundationAnyObject object, CInteger index)
+C_SWIFT_NAME(_CoreFoundationArray.setObject(self:_:at:));
 
 C_ASSUME_NONNULL_END
 

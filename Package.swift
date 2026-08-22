@@ -36,8 +36,7 @@ let package = Package(
     .target(
       name: "CoreFoundationKit",
       dependencies: dependencies.map { .product(name: $0.1, package: $0.0) },
-      publicHeadersPath: "Includes",
-      cSettings: Context.environment["ONLINE_JUDGE"] != nil ? [.define("ONLINE_JUDGE")] : []
+      publicHeadersPath: "Includes"
     ),
     .testTarget(
       name: "CoreFoundationKitTests",

@@ -75,6 +75,14 @@ CoreFoundationAnyObject CoreFoundationArrayGetObjectAtIndex(CoreFoundationArray 
   return array->_objects[index];
 }
 
+void CoreFoundationArraySetObjectAtIndex(CoreFoundationArray array, CoreFoundationAnyObject object, CInteger index) {
+  CDebuggingPrecondition(index >= 0 && index < array->_count, "Index out of range.");
+
+  CoreFoundationObjectRetain(object);
+  CoreFoundationObjectRelease(array->_objects[index]);
+  array->_objects[index] = object;
+}
+
 C_INITIALIZER void CoreFoundationArrayRegisterClass() {
   _CoreFoundationClassTable[kCoreFoundationTypeIDArray]._deinitialize = _CoreFoundationArrayDeinitialize;
 }
