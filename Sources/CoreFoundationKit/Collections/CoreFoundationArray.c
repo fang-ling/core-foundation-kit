@@ -28,7 +28,7 @@ struct _CoreFoundationArray {
   CInteger _capacity;
 };
 
-CoreFoundationArray CoreFoundationArrayInitialize(CoreFoundationAnyObject const * objects, CInteger count) {
+CoreFoundationArray CoreFoundationArrayInitialize(CoreFoundationAnyObject const* objects, CInteger count) {
   let array = (struct _CoreFoundationArray*)CMemoryAllocate(1, sizeof(struct _CoreFoundationArray));
 
   array->_object._metadata = 0;
