@@ -19,7 +19,9 @@
 ##===----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------===##
 
 clang-format --dry-run -Werror \
-             Sources/CoreFoundationKit/Collections/CoreFoundationArray.h Sources/CoreFoundationKit/Collections/CoreFoundationArray.c \
-             Sources/CoreFoundationKit/Ranges/CoreFoundationRange.h Sources/CoreFoundationKit/Ranges/CoreFoundationRange.c
+             "Sources/CoreFoundationKit/Values and Collections/Collections/Arrays and Dictionaries/CoreFoundationArray.h" \
+             "Sources/CoreFoundationKit/Values and Collections/Collections/Arrays and Dictionaries/CoreFoundationArray.c" \
+             "Sources/CoreFoundationKit/Values and Collections/Basic Values/Ranges/CoreFoundationRange.h" \
+             "Sources/CoreFoundationKit/Values and Collections/Basic Values/Ranges/CoreFoundationRange.c"
 
 swift-format lint . --parallel --recursive --strict
