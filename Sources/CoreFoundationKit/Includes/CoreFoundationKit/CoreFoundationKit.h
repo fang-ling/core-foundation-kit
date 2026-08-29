@@ -35,6 +35,8 @@
 
 #include "../../Numerics/CoreFoundationNumber.h"
 
+#include "../../Ranges/CoreFoundationRange.h"
+
 #include "../../Sorting/CoreFoundationComparisonResult.h"
 
 #include "../../Strings/CoreFoundationString.h"

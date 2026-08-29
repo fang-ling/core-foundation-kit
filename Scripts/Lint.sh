@@ -18,6 +18,8 @@
 ##
 ##===----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------===##
 
-clang-format --dry-run -Werror Sources/CoreFoundationKit/Collections/CoreFoundationArray.h Sources/CoreFoundationKit/Collections/CoreFoundationArray.c
+clang-format --dry-run -Werror \
+             Sources/CoreFoundationKit/Collections/CoreFoundationArray.h Sources/CoreFoundationKit/Collections/CoreFoundationArray.c \
+             Sources/CoreFoundationKit/Ranges/CoreFoundationRange.h Sources/CoreFoundationKit/Ranges/CoreFoundationRange.c
 
 swift-format lint . --parallel --recursive --strict

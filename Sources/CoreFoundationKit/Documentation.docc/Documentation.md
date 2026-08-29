@@ -9,3 +9,7 @@ provides abstractions for common data types, facilitates internationalization wi
 access, and preferences.
 
 ## Topics
+
+### Values and Collections
+
+- <doc:Basic-Values>
