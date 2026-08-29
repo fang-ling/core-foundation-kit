@@ -20,7 +20,7 @@
 #define CoreFoundationArray_h
 
 #include "../Base/CoreFoundationObject.h"
-#include "../Ranges/CoreFoundationRange.h"
+#include "../Values and Collections/Basic Values/Ranges/CoreFoundationRange.h"
 
 #include <CKit/CKit.h>
 

@@ -21,7 +21,7 @@
 
 #include "../../Base/CoreFoundationObject.h"
 
-#include "../../Collections/CoreFoundationArray.h"
+#include "../../Values and Collections/Collections/Arrays and Dictionaries/CoreFoundationArray.h"
 #include "../../Collections/CoreFoundationDictionary.h"
 #include "../../Collections/CoreFoundationMutableDictionary.h"
 #include "../../Collections/CoreFoundationMutableSet.h"
@@ -34,7 +34,7 @@
 
 #include "../../Numerics/CoreFoundationNumber.h"
 
-#include "../../Ranges/CoreFoundationRange.h"
+#include "../../Values and Collections/Basic Values/Ranges/CoreFoundationRange.h"
 
 #include "../../Sorting/CoreFoundationComparisonResult.h"
 
