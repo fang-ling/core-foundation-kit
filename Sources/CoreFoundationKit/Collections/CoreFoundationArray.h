@@ -20,6 +20,7 @@
 #define CoreFoundationArray_h
 
 #include "../Base/CoreFoundationObject.h"
+#include "../Ranges/CoreFoundationRange.h"
 
 #include <CKit/CKit.h>
 
@@ -60,6 +61,7 @@ C_ASSUME_NONNULL_BEGIN
  * ### Replacing Objects
  *
  * - ``CoreFoundationArraySetObjectAtIndex``
+ * - ``CoreFoundationArrayReplaceSubrangeWithObjects``
  */
 typedef struct _CoreFoundationArray* CoreFoundationArray;
 
@@ -118,9 +120,26 @@ CoreFoundationAnyObject CoreFoundationArrayGetObjectAtIndex(CoreFoundationArray 
  *   - array: The array in which the object is to be changed.
  *   - index: The index at which to set the new object. The object must not lie outside the index space of the array (`0` to `N-1` inclusive, where `N` is the count of the array before the operation).
  *   - object: The object to set in the array. The object is retained by the array using the ``CoreFoundationObjectRetain`` function and the previous object at `index` is released. If the value is not
- *     of the type expected by the retain function, the behavior is undefined. The indices of other values are not affected.
+ *     of the type expected by the retain function, the behavior is undefined. The indices of other objects are not affected.
  */
 void CoreFoundationArraySetObjectAtIndex(CoreFoundationArray array, CoreFoundationAnyObject object, CInteger index);
+
+/**
+ * Replaces the objects in the receiving array specified by a given range with all of the objects from a given array.
+ *
+ * - Parameters:
+ *   - array: The array in which some objects are to be replaced.
+ *   - range: The range of objects within the `array` to replace. The range `location` or end point (defined by the `location` plus `count` minus 1) must not lie outside the index space of the `array`
+ *     (`0` to `N-1` inclusive, where `N` is the count of the `array`). The range `count` must not be negative. The range may be empty (`count` `0`), in which case the new objects are merely inserted
+ *     at the range location.
+ *   - newObjects: A C array of the pointer-sized objects to be placed into the `array`. The new objects in the `array` are ordered in the same order in which they appear in this C array. This
+ *     parameter may be `null` if the `newCount` parameter is `0`. This C array is not changed or freed by this function. If this parameter is not a valid pointer to a C array of at least `newCount`
+ *     objects, the behavior is undefined.
+ *   - newCount: The number of objects to copy from the `newObjects` C array into the `array`. If this parameter is different from the range length, the excess `newCount` objects are inserted after
+ *     the range or the excess range objects are deleted. This parameter may be `0`, in which case no new objects are replaced into the `array` and the objects in the range are simply removed. If this
+ *     parameter is negative or greater than the number of objects actually in the `newObjects` C array, the behavior is undefined.
+ */
+void CoreFoundationArrayReplaceSubrangeWithObjects(CoreFoundationArray array, CoreFoundationRange range, CoreFoundationAnyObject const nonnil* nillable newObjects, CInteger newCount);
 
 C_ASSUME_NONNULL_END
 

@@ -18,6 +18,8 @@ Functions:
     SwiftName: _CoreFoundationArray.object(self:at:)
   - Name: CoreFoundationArraySetObjectAtIndex
     SwiftName: _CoreFoundationArray.setObject(self:_:at:)
+  - Name: CoreFoundationArrayReplaceSubrangeWithObjects
+    SwiftName: _CoreFoundationArray.replaceSubrange(self:_:with:_:)
   - Name: CoreFoundationRangeMake
     Availability: nonswift
     AvailabilityMsg: 'Use CoreFoundationRange.init(location:count:) instead.'

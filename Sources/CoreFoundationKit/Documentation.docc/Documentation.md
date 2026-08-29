@@ -13,3 +13,4 @@ access, and preferences.
 ### Values and Collections
 
 - <doc:Basic-Values>
+- <doc:Collections>

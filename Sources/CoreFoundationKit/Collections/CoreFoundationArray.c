@@ -87,6 +87,51 @@ void CoreFoundationArraySetObjectAtIndex(CoreFoundationArray array, CoreFoundati
   array->_objects[index] = object;
 }
 
+void CoreFoundationArrayReplaceSubrangeWithObjects(CoreFoundationArray array, CoreFoundationRange range, CoreFoundationAnyObject const nonnil* nillable newObjects, CInteger newCount) {
+  CDebuggingPrecondition(range.count >= 0, "Range count must not be negative.");
+  CDebuggingPrecondition(range.location >= 0 && range.location + range.count <= array->_count, "Index out of range.");
+  CDebuggingPrecondition(newCount >= 0, "newCount must not be negative.");
+  CDebuggingPrecondition(newCount == 0 || newObjects != null, "newObjects must not be null when newCount is nonzero.");
+
+  let i = 0;
+  for (; i < newCount; i += 1) {
+    CoreFoundationObjectRetain(newObjects[i]);
+  }
+
+  let rangeEndLocation = range.location + range.count;
+  for (i = range.location; i < rangeEndLocation; i += 1) {
+    CoreFoundationObjectRelease(array->_objects[i]);
+  }
+
+  let newArrayCount = array->_count - range.count + newCount;
+  if (array->_capacity < newArrayCount) {
+    array->_capacity = array->_capacity > 0 ? array->_capacity : 1;
+    while (array->_capacity < newArrayCount) {
+      array->_capacity *= 2;
+    }
+
+    array->_objects = CMemoryResize(array->_objects, array->_capacity * sizeof(CoreFoundationAnyObject));
+  }
+
+  /* Make room for new objects. */
+  let tailCount = array->_count - rangeEndLocation;
+  if (newCount != range.count && tailCount > 0) {
+    CMemoryCopy(array->_objects + range.location + newCount, array->_objects + rangeEndLocation, tailCount * sizeof(CoreFoundationAnyObject));
+  }
+
+  CMemoryCopy(array->_objects + range.location, newObjects, newCount * sizeof(CoreFoundationAnyObject));
+
+  if (array->_capacity > 1 && newArrayCount * 4 <= array->_capacity) {
+    while (array->_capacity > 1 && newArrayCount * 4 <= array->_capacity) {
+      array->_capacity /= 2;
+    }
+
+    array->_objects = CMemoryResize(array->_objects, array->_capacity * sizeof(CoreFoundationAnyObject));
+  }
+
+  array->_count = newArrayCount;
+}
+
 C_INITIALIZER void CoreFoundationArrayRegisterClass() {
   _CoreFoundationClassTable[kCoreFoundationTypeIDArray]._deinitialize = _CoreFoundationArrayDeinitialize;
 }
