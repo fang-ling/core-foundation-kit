@@ -30,17 +30,17 @@ C_ASSUME_NONNULL_BEGIN
  *
  * ``CoreFoundationArray`` manages ordered collections of objects called arrays. ``CoreFoundationArray`` creates both static and dynamic arrays.
  *
- * You create an array object using the ``CoreFoundationArrayInitialize`` function. This functions return an array containing the objects you pass in as arguments. (Note that arrays can't contain
- * `null` pointers; in most cases, though, you can use the ``kCoreFoundationNull`` constant instead.) Objects are not copied but retained when an array was created. Similarly, when an object is
- * removed from an array, it is released.
+ * You create an array object using either the ``CoreFoundationArrayInitialize`` or ``CoreFoundationArrayCopy`` function. This functions return an array containing the objects you pass in as
+ * arguments. (Note that arrays can't contain `null` pointers; in most cases, though, you can use the ``kCoreFoundationNull`` constant instead.) Objects are not copied but retained when an array was
+ * created. Similarly, when an object is removed from an array, it is released.
  *
  * ``CoreFoundationArray``'s two primitive functions ``CoreFoundationArrayGetCount`` and ``CoreFoundationArrayGetObjectAtIndex`` provide the basis for all other non-mutating functions in its
  * interface. The ``CoreFoundationArrayGetCount`` function returns the number of elements in an array; ``CoreFoundationArrayGetObjectAtIndex`` gives you access to an array's elements by index, with
  * index values starting at `0`.
  *
  * ``CoreFoundationArray`` also provides several functions for changing the contents of an array, for example the ``CoreFoundationArrayAppendObject`` and ``CoreFoundationArrayInsertObjectAtIndex``
- * functions add values to an array; ``CoreFoundationArrayRemoveLastObject`` and ``CoreFoundationArrayRemoveObjectAtIndex`` removes values from an array. You can also reorder the contents of an array
- * using ``CoreFoundationArrayExchangeObjectsAtIndices`` and ``CoreFoundationArraySortObjects``.
+ * functions add objects to an array; ``CoreFoundationArrayRemoveLastObject`` and ``CoreFoundationArrayRemoveObjectAtIndex`` removes objects from an array. You can also reorder the contents of an
+ * array using ``CoreFoundationArrayExchangeObjectsAtIndices`` and ``CoreFoundationArraySortObjects``.
  *
  * ## Topics
  *
@@ -67,10 +67,12 @@ typedef struct _CoreFoundationArray* CoreFoundationArray;
  * Creates a new array with the given objects.
  *
  * - Parameters:
- *   - objects: A C array of the pointer-sized values to be in the new array. The values in the new array are ordered in the same order in which they appear in this C array. This value may be `null`
+ *   - objects: A C array of the pointer-sized objects to be in the new array. The objects in the new array are ordered in the same order in which they appear in this C array. This value may be `null`
  *     if `count` is 0. This C array is not changed or freed by this function. If `objects` is not a valid pointer to a C array of at least `count` elements, the behavior is undefined.
- *   - count: The number of objects to copy from the values C array into the new array. This number will be the count of the new array—it must not be negative or greater than the number of elements in
- *     `objects`.
+ *   - count: The number of objects to copy from the objects C array into the new array. This number will be the count of the new array—it must not be negative or greater than the number of elements
+ *     in `objects`.
+ *
+ * - Returns: A new array containing `count` number of objects from `objects`.
  */
 CoreFoundationArray CoreFoundationArrayInitialize(CoreFoundationAnyObject const nonnil* nillable objects, CInteger count);
 
