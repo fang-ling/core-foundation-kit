@@ -47,6 +47,7 @@ C_ASSUME_NONNULL_BEGIN
  * ### Creating an Array
  *
  * - ``CoreFoundationArrayInitialize``
+ * - ``CoreFoundationArrayCopy``
  *
  * ### Inspecting an Array
  *
@@ -76,6 +77,17 @@ CoreFoundationArray CoreFoundationArrayInitialize(CoreFoundationAnyObject const 
 void _CoreFoundationArrayRetain(CoreFoundationArray array);
 
 void _CoreFoundationArrayRelease(CoreFoundationArray array);
+
+/**
+ * Creates a new array with the objects from another array.
+ *
+ * The objects from the `array` are copied into the new array; the objects are also retained by the new array. The count of the new array is the same as the `array`.
+ *
+ * - Parameter array: The array to copy.
+ *
+ * - Returns: A new ``CoreFoundationArray`` object that contains the same objects as the `array`.
+ */
+CoreFoundationArray CoreFoundationArrayCopy(CoreFoundationArray array);
 
 /**
  * Returns the number of objects currently in an array.

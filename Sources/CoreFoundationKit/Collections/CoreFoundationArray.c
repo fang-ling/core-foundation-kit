@@ -65,6 +65,10 @@ void _CoreFoundationArrayRelease(CoreFoundationArray array) {
   CoreFoundationObjectRelease((void*)array);
 }
 
+CoreFoundationArray CoreFoundationArrayCopy(CoreFoundationArray array) {
+  return CoreFoundationArrayInitialize(array->_objects, array->_count);
+}
+
 CInteger CoreFoundationArrayGetCount(CoreFoundationArray array) {
   return array->_count;
 }

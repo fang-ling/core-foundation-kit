@@ -9,6 +9,9 @@ Functions:
   - Name: CoreFoundationArrayInitialize
     SwiftName: _CoreFoundationArray.init(objects:count:)
     SwiftReturnOwnership: retained
+  - Name: CoreFoundationArrayCopy
+    SwiftName: _CoreFoundationArray.copy(self:)
+    SwiftReturnOwnership: retained
   - Name: CoreFoundationArrayGetCount
     SwiftName: getter:_CoreFoundationArray.count(self:)
   - Name: CoreFoundationArrayGetObjectAtIndex
