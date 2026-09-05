@@ -38,7 +38,7 @@
 
 #include "../../Sorting/CoreFoundationComparisonResult.h"
 
-#include "../../Strings/CoreFoundationString.h"
+#include "../../Values and Collections/Strings and Text/Strings and Characters/CoreFoundationString.h"
 
 #include "../../Values/CoreFoundationValue.h"
 

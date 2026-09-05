@@ -5,6 +5,10 @@ Tags:
     SwiftImportAs: reference
     SwiftRetainOp: _CoreFoundationArrayRetain
     SwiftReleaseOp: _CoreFoundationArrayRelease
+  - Name: _CoreFoundationString
+    SwiftImportAs: reference
+    SwiftRetainOp: _CoreFoundationStringRetain
+    SwiftReleaseOp: _CoreFoundationStringRelease
 Functions:
   - Name: CoreFoundationArrayInitialize
     SwiftName: _CoreFoundationArray.init(objects:count:)
@@ -23,3 +27,10 @@ Functions:
   - Name: CoreFoundationRangeMake
     Availability: nonswift
     AvailabilityMsg: 'Use CoreFoundationRange.init(location:count:) instead.'
+  - Name: CoreFoundationStringInitializeWithUTF8CString
+    SwiftName: _CoreFoundationString.init(cString:)
+    SwiftReturnOwnership: retained
+  - Name: CoreFoundationStringGetCount
+    SwiftName: getter:_CoreFoundationString.count(self:)
+  - Name: CoreFoundationStringGetUTF8CodeUnitAtIndex
+    SwiftName: _CoreFoundationString.utf8CodeUnit(self:at:)
