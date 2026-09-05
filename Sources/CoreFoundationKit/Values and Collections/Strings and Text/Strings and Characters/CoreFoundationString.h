@@ -51,7 +51,7 @@ C_ASSUME_NONNULL_BEGIN
  *
  * ### Accessing Characters
  *
- * - ``CoreFoundationStringGetCharacterAtIndex``
+ * - ``CoreFoundationStringGetUTF8CodeUnitAtIndex``
  */
 typedef struct _CoreFoundationString* CoreFoundationString;
 

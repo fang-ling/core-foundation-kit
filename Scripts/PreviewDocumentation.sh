@@ -21,7 +21,18 @@
 SYMBOLS_FOLDER="/dev/shm/symbol-graphs"
 OUTPUT_FOLDER="/dev/shm/docc"
 
-clang -extract-api --product-name=CoreFoundationKit -o $SYMBOLS_FOLDER/CoreFoundationKit.symbols.json -x c-header Sources/CoreFoundationKit/**/*.h -I . -I ../c-kit/Sources/CKit/Includes
+clang \
+    -extract-api \
+    --product-name=CoreFoundationKit \
+    -o $SYMBOLS_FOLDER/CoreFoundationKit.symbols.json \
+    -x c-header \
+    "Sources/CoreFoundationKit/Base/CoreFoundationObject.h" \
+    "Sources/CoreFoundationKit/Values and Collections/Basic Values/Ranges/CoreFoundationRange.h" \
+    "Sources/CoreFoundationKit/Values and Collections/Collections/Arrays and Dictionaries/CoreFoundationArray.h" \
+    "Sources/CoreFoundationKit/Values and Collections/Strings and Text/Strings and Characters/CoreFoundationString.h" \
+    -I . \
+    -I Sources/CoreFoundationKit/Includes \
+    -I ../c-kit/Sources/CKit/Includes
 
 docc convert Sources/CoreFoundationKit/Documentation.docc -o $OUTPUT_FOLDER --additional-symbol-graph-dir $SYMBOLS_FOLDER
 
