@@ -6,4 +6,4 @@ Store and organize data using arrays, dictionaries, sets, and other data structu
 
 ### Arrays and Dictionaries
 
-- ``CoreFoundationArray``
+- ``CoreFoundationKit/CoreFoundationArray``

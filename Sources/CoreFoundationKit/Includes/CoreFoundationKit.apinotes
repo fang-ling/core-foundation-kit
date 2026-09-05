@@ -34,3 +34,5 @@ Functions:
     SwiftName: getter:_CoreFoundationString.count(self:)
   - Name: CoreFoundationStringGetUTF8CodeUnitAtIndex
     SwiftName: _CoreFoundationString.utf8CodeUnit(self:at:)
+  - Name: CoreFoundationStringGetUTF8CString
+    SwiftName: getter:_CoreFoundationString.utf8CString(self:)

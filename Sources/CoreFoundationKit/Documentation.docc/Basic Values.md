@@ -6,4 +6,4 @@ Model data with fundamental types.
 
 ### Ranges
 
-- ``CoreFoundationRange``
+- ``CoreFoundationKit/CoreFoundationRange``

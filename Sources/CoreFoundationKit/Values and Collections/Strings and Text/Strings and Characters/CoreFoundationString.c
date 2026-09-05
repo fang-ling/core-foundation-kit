@@ -63,6 +63,10 @@ CInteger8 CoreFoundationStringGetUTF8CodeUnitAtIndex(CoreFoundationString string
   return string->_utf8CodeUnits[index];
 }
 
+CString CoreFoundationStringGetUTF8CString(CoreFoundationString string) {
+  return string->_utf8CodeUnits;
+}
+
 C_INITIALIZER void CoreFoundationStringRegisterClass() {
   _CoreFoundationClassTable[kCoreFoundationTypeIDString]._deinitialize = _CoreFoundationStringDeinitialize;
 }

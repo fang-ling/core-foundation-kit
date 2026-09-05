@@ -29,7 +29,7 @@ C_ASSUME_NONNULL_BEGIN
  * ``CoreFoundationString`` provides a suite of efficient string-manipulation and string-conversion functions. It offers seamless Unicode support and facilitates the sharing of data between
  * CoreFoundationKit and C-based programs.
  *
- * ``CoreFoundationString`` objects manage static and dynamic strings.
+ * ``CoreFoundationString`` objects manage both static and dynamic strings.
  *
  * ``CoreFoundationString`` has two primitive functions, ``CoreFoundationStringGetCount`` and ``CoreFoundationStringGetUTF8CodeUnitAtIndex``, that provide the basis for all other non-mutating
  * functions in its interface. The ``CoreFoundationStringGetCount`` function returns the length (in terms of UTF-8 code units) of the string. The ``CoreFoundationStringGetUTF8CodeUnitAtIndex``
@@ -52,6 +52,7 @@ C_ASSUME_NONNULL_BEGIN
  * ### Accessing Characters
  *
  * - ``CoreFoundationStringGetUTF8CodeUnitAtIndex``
+ * - ``CoreFoundationStringGetUTF8CString``
  */
 typedef struct _CoreFoundationString* CoreFoundationString;
 
@@ -92,6 +93,17 @@ CInteger CoreFoundationStringGetCount(CoreFoundationString string);
  * - Returns: A UTF-8 code unit.
  */
 CInteger8 CoreFoundationStringGetUTF8CodeUnitAtIndex(CoreFoundationString string, CInteger index);
+
+/**
+ * Quickly obtains a C string containing the characters of a string in UTF-8 encoding.
+ *
+ * This function returns the requested C string immediately, with no memory allocations and no copying, in constant time.
+ *
+ * - Parameter string: The string whose contents you wish to access.
+ *
+ * - Returns: A C string.
+ */
+CString CoreFoundationStringGetUTF8CString(CoreFoundationString string);
 
 C_ASSUME_NONNULL_END
 

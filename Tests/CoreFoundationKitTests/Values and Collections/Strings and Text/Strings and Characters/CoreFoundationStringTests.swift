@@ -45,4 +45,11 @@ struct CoreFoundationStringTests {
       }
     }
   }
+
+  @Test func testGettingUTF8CString() {
+    for input in strings {
+      let string = CoreFoundationString(cString: input)
+      #expect(strcmp(string.utf8CString, input) == 0)
+    }
+  }
 }
