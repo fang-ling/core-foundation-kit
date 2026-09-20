@@ -1,6 +1,6 @@
 ---
 BasedOnStyle: LLVM
-ColumnLimit: 180
+ColumnLimit: 200
 
 # Force pointers to the type.
 DerivePointerAlignment: false

@@ -1,27 +1,28 @@
-/*
+/*===----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*
+ *
  *  CoreFoundationKit.h
  *  core-foundation-kit
  *
  *  Created by Fang Ling on 2026/4/25.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ *  This source file is part of the CoreFoundationKit open source project
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *  Copyright (c) 2026 Fang Ling <fangling@fangl.ing>
+ *  Licensed under Apache License v2.0
  *
- *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and limitations under the License.
- */
+ *  See LICENSE for license information
+ *
+ *  SPDX-License-Identifier: Apache-2.0
+ *
+ *===----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------===*/
 
 #ifndef CoreFoundationKit_h
 #define CoreFoundationKit_h
 
 #include "../../Base/CoreFoundationObject.h"
 
-#include "../../Collections/CoreFoundationArray.h"
+#include "../../Values and Collections/Collections/Arrays and Dictionaries/CoreFoundationArray.h"
 #include "../../Collections/CoreFoundationDictionary.h"
-#include "../../Collections/CoreFoundationMutableArray.h"
 #include "../../Collections/CoreFoundationMutableDictionary.h"
 #include "../../Collections/CoreFoundationMutableSet.h"
 #include "../../Collections/CoreFoundationRedBlackTree.h"
@@ -33,9 +34,11 @@
 
 #include "../../Numerics/CoreFoundationNumber.h"
 
+#include "../../Values and Collections/Basic Values/Ranges/CoreFoundationRange.h"
+
 #include "../../Sorting/CoreFoundationComparisonResult.h"
 
-#include "../../Strings/CoreFoundationString.h"
+#include "../../Values and Collections/Strings and Text/Strings and Characters/CoreFoundationString.h"
 
 #include "../../Values/CoreFoundationValue.h"
 
